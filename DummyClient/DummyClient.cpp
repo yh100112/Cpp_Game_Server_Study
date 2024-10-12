@@ -4,4 +4,5 @@
 int main()
 {
     HelloWorld();
+    cout << "hello client first test" << endl;
 }
