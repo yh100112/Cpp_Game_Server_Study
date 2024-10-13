@@ -15,6 +15,12 @@
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="atomic.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="lock.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
