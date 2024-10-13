@@ -30,6 +30,11 @@ public:
 		while (_locked.compare_exchange_strong(expected, desired) == false)
 		{
 			expected = false; // CAS 사용시 매번 expected에 locked가 들어가서 갱신되므로 초기값인 false로 다시 세팅해줘야 함
+
+			// sleep 방식 ( 랜덤 메타 )
+			//1. this_thread::sleep_for(std::chrono::milliseconds(100));
+			//2. this_thread::sleep_for(100ms);
+			//3.this_thread::yield(); // == sleep_for(0ms)
 		}
 
 		// 스핀락 대기와 락 설정이 따로되어있어서 경합 발생할 수 있음 ( 옳은 스핀락 x )
