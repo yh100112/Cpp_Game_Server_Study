@@ -7,9 +7,15 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{fe26c36e-6577-46d2-9448-44a9d311ed28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="deadlock">
+      <UniqueIdentifier>{480606b4-7486-4836-b4ad-f3c3fdc07571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpinLock">
+      <UniqueIdentifier>{8bef41a3-ee10-4260-9b43-1c4d4bdf3e1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameServer.cpp">
+    <ClCompile Include="multi_thread.cpp">
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -21,14 +27,17 @@
     <ClCompile Include="lock.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="deaklock.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="UserManager.cpp">
-      <Filter>Main</Filter>
+      <Filter>deadlock</Filter>
+    </ClCompile>
+    <ClCompile Include="deaklock.cpp">
+      <Filter>deadlock</Filter>
     </ClCompile>
     <ClCompile Include="AccountManager.cpp">
-      <Filter>Main</Filter>
+      <Filter>deadlock</Filter>
+    </ClCompile>
+    <ClCompile Include="spinlock.cpp">
+      <Filter>SpinLock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,10 +45,10 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="UserManager.h">
-      <Filter>Main</Filter>
+      <Filter>deadlock</Filter>
     </ClInclude>
     <ClInclude Include="AccountManager.h">
-      <Filter>Main</Filter>
+      <Filter>deadlock</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
