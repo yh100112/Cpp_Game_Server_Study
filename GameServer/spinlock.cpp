@@ -31,7 +31,7 @@ public:
 		{
 			expected = false; // CAS 사용시 매번 expected에 locked가 들어가서 갱신되므로 초기값인 false로 다시 세팅해줘야 함
 
-			// sleep 방식 ( 랜덤 메타 )
+			// sleep 방식 ( 랜덤 메타 ) - 커널 모드로 가게 함  (system call - os에게 요청하는 부분)
 			//1. this_thread::sleep_for(std::chrono::milliseconds(100));
 			//2. this_thread::sleep_for(100ms);
 			//3.this_thread::yield(); // == sleep_for(0ms)

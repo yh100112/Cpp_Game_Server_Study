@@ -40,7 +40,7 @@ void Push()
 
 		//LockGuard<std::mutex> lockGuard(m); // 안전하게 뮤텍스를 래핑해서 사용
 		//std::lock_guard<std::mutex> lockGuard(m);
-		std::unique_lock<std::mutex> uniqueLock(m, std::defer_lock); // lock_guard와 다른 점 : lock_guard처럼 만들자마자 잠기는 게 아니라 잠금 시점을 뒤로 미룰 수 있다. 나머지는 동일
+		std::unique_lock<std::mutex> uniqueLock(m, std::defer_lock); // lock_guard와 다른 점 : deter_lock을 인자로 넣어주면 lock_guard처럼 만들자마자 잠기는 게 아니라 잠금 시점을 뒤로 미룰 수 있다. 나머지는 동일
 		uniqueLock.lock();
 
 		v.push_back(i);

@@ -10,7 +10,7 @@
     <Filter Include="deadlock">
       <UniqueIdentifier>{480606b4-7486-4836-b4ad-f3c3fdc07571}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SpinLock">
+    <Filter Include="Lock">
       <UniqueIdentifier>{8bef41a3-ee10-4260-9b43-1c4d4bdf3e1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -37,7 +37,13 @@
       <Filter>deadlock</Filter>
     </ClCompile>
     <ClCompile Include="spinlock.cpp">
-      <Filter>SpinLock</Filter>
+      <Filter>Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="event.cpp">
+      <Filter>Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="condition_variable.cpp">
+      <Filter>Lock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
