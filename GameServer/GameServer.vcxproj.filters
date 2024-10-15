@@ -45,6 +45,12 @@
     <ClCompile Include="condition_variable.cpp">
       <Filter>Lock</Filter>
     </ClCompile>
+    <ClCompile Include="Future.cpp">
+      <Filter>Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_cash.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
