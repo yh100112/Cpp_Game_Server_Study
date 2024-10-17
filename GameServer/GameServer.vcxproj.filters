@@ -54,6 +54,12 @@
     <ClCompile Include="cpu_pipeline.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="memory_model.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="TLS.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
