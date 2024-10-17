@@ -51,6 +51,9 @@
     <ClCompile Include="memory_cash.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="cpu_pipeline.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
