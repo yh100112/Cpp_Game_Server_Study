@@ -13,7 +13,7 @@
     <Filter Include="Lock">
       <UniqueIdentifier>{8bef41a3-ee10-4260-9b43-1c4d4bdf3e1e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Practice">
+    <Filter Include="LockPractice">
       <UniqueIdentifier>{05c77470-135b-40d5-afaf-c5587a33cd03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -64,13 +64,13 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="GameServer.cpp">
-      <Filter>Practice</Filter>
+      <Filter>LockPractice</Filter>
     </ClCompile>
     <ClCompile Include="ConcurrentQueue.cpp">
-      <Filter>Practice</Filter>
+      <Filter>LockPractice</Filter>
     </ClCompile>
     <ClCompile Include="ConcurrentStack.cpp">
-      <Filter>Practice</Filter>
+      <Filter>LockPractice</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,10 +84,10 @@
       <Filter>deadlock</Filter>
     </ClInclude>
     <ClInclude Include="ConcurrentQueue.h">
-      <Filter>Practice</Filter>
+      <Filter>LockPractice</Filter>
     </ClInclude>
     <ClInclude Include="ConcurrentStack.h">
-      <Filter>Practice</Filter>
+      <Filter>LockPractice</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
