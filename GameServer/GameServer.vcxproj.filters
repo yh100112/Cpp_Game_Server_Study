@@ -16,6 +16,9 @@
     <Filter Include="LockPractice">
       <UniqueIdentifier>{05c77470-135b-40d5-afaf-c5587a33cd03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="threadManager">
+      <UniqueIdentifier>{5fe2e8db-dd7b-4bba-a5c1-09aa158a5b71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="multi_thread.cpp">
@@ -63,7 +66,7 @@
     <ClCompile Include="TLS.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="GameServer.cpp">
+    <ClCompile Include="LockPracMain.cpp">
       <Filter>LockPractice</Filter>
     </ClCompile>
     <ClCompile Include="ConcurrentQueue.cpp">
@@ -71,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="ConcurrentStack.cpp">
       <Filter>LockPractice</Filter>
+    </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>threadManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

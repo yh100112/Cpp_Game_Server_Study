@@ -5,42 +5,25 @@
 #include <mutex>
 #include <windows.h>
 #include <future>
-#include "ConcurrentQueue.h"
-#include "ConcurrentStack.h"
+#include "ThreadManager.h"
 
-// queue 자체에다가 락을 낑겨서 만들어서 쓰면 좋지 않을까?
-LockQueue<int32> q;
-//LockStack<int32> s;
-LockFreeStack<int32> s;
+CoreGlobal core;
 
-void Push() 
+void ThreadMain()
 {
-	while (true) 
+	while (true)
 	{
-		int32 value = rand() % 100;
-		s.Push(value);
-
-		//this_thread::sleep_for(10ms);
-	}
-}
-
-void Pop() 
-{
-	while (true) 
-	{
-		int32 data = 0;
-		if (s.TryPop(OUT data))
-			cout << data << endl;
+		cout << "hello i am thread... " << LThreadId << endl;
+		this_thread::sleep_for(1s);
 	}
 }
 
 int main()
 {
-	thread t1(Push);
-	thread t2(Pop);
-	thread t3(Pop);
+	for (int32 i = 0; i < 5; i++)
+	{
+		GThreadManager->Launch(ThreadMain);
+	}
 
-	t1.join();
-	t2.join();
-	t3.join();
+	GThreadManager->Join();
 }
