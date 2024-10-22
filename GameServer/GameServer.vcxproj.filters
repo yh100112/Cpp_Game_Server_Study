@@ -19,6 +19,9 @@
     <Filter Include="threadManager">
       <UniqueIdentifier>{5fe2e8db-dd7b-4bba-a5c1-09aa158a5b71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{f707cab4-1666-4e8b-98c5-bc9be4381921}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="multi_thread.cpp">
@@ -77,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="GameServer.cpp">
       <Filter>threadManager</Filter>
+    </ClCompile>
+    <ClCompile Include="smart_pointer.cpp">
+      <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

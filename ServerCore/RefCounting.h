@@ -1,36 +1,34 @@
 #pragma once
 
-/*----------------
-	RefCountable
------------------*/
-
+/*---------------
+   RefCountable
+----------------*/
 class RefCountable
 {
 public:
+	// ref count는 정책상 초기값은 1로 함
 	RefCountable() : _refCount(1) { }
+	
+	// 메모리 릭을 예방하기 위해 최상위 클래스에 소멸자에는 virtual을 선언해야 함
 	virtual ~RefCountable() { }
 
 	int32 GetRefCount() { return _refCount; }
-
 	int32 AddRef() { return ++_refCount; }
-	int32 ReleaseRef()
+	int32 ReleaseRef() 
 	{
 		int32 refCount = --_refCount;
 		if (refCount == 0)
-		{
 			delete this;
-		}
 		return refCount;
 	}
 
 protected:
-	int32 _refCount;
+	atomic<int32> _refCount;
 };
 
-
-/*----------------
-	SharedPtr
------------------*/
+/*---------------
+   SharedPtr
+----------------*/
 
 template<typename T>
 class TSharedPtr
@@ -41,12 +39,10 @@ public:
 
 	// 복사
 	TSharedPtr(const TSharedPtr& rhs) { Set(rhs._ptr); }
-
-	//  이동
+	// 이동
 	TSharedPtr(TSharedPtr&& rhs) { _ptr = rhs._ptr; rhs._ptr = nullptr; }
-
 	// 상속 관계 복사
-	template<typename T>
+	template<typename U>
 	TSharedPtr(const TSharedPtr<U>& rhs) { Set(static_cast<T*>(rhs._ptr)); }
 
 	~TSharedPtr() { Release(); }
@@ -72,17 +68,17 @@ public:
 		return *this;
 	}
 
-	bool operator==(const TSharedPtr& rhs) const { return _ptr == rhs._ptr; }
-	bool operator==(T* ptr) const { return _ptr == ptr; }
-	bool operator!=(const TSharedPtr& rhs) const { return _ptr != rhs._ptr; }
-	bool operator!=(T* ptr) const { return _ptr != ptr; }
-	bool operator<(const TSharedPtr& rhs) const { return _ptr < rhs._ptr; }
+	bool		operator==(const TSharedPtr& rhs) const { return _ptr == rhs._ptr; }
+	bool		operator==(T* ptr) const { return _ptr == ptr; }
+	bool		operator!=(const TSharedPtr& rhs) const { return _ptr != rhs._ptr; }
+	bool		operator!=(T* ptr) const { return _ptr != ptr; }
+	bool		operator<(const TSharedPtr& rhs) const { return _ptr < rhs._ptr; }
 	T* operator*() { return _ptr; }
-	const T* operator*() { return _ptr; }
+	const T* operator*() const { return _ptr; }
 	operator T* () const { return _ptr; }
 	T* operator->() { return _ptr; }
 	const T* operator->() const { return _ptr; }
-	
+
 	bool IsNull() { return _ptr == nullptr; }
 
 private:

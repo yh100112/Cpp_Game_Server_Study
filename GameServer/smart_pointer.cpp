@@ -7,8 +7,9 @@
 #include <future>
 #include "ThreadManager.h"
 
-#include "RefCountable.h"
+#include "RefCounting.h"
 
+// RefCountble을 상속받으므로 이 객체는 항상 자신을 참조하는 아이의 개수를 추적할 수 있게됨
 class Wraight : public RefCountable
 {
 public:
@@ -22,12 +23,13 @@ using WraightRef = TSharedPtr<Wraight>;
 class Missile : public RefCountable
 {
 public:
+	// 타겟 설정
 	void SetTarget(WraightRef target)
 	{
 		_target = target;
-		//target->AddRef();
 	}
 
+	// TODO : 타겟을 미사일이 쫓아간다 ( 무한 루프 )
 	bool Update()
 	{
 		if (_target == nullptr)
@@ -36,11 +38,8 @@ public:
 		int posX = _target->_posX;
 		int posY = _target->_posY;
 
-		// TODO : 쫓아간다
-
 		if (_target->_hp == 0)
 		{
-			//_target->ReleaseRef(); //  레퍼 카운트 1 줄여주는 동작
 			_target = nullptr;
 			return true;
 		}
