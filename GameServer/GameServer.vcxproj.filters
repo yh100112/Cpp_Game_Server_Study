@@ -84,6 +84,9 @@
     <ClCompile Include="smart_pointer.cpp">
       <Filter>memory</Filter>
     </ClCompile>
+    <ClCompile Include="ref_count_cycle_problem.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

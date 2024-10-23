@@ -29,31 +29,39 @@ protected:
 /*---------------
    SharedPtr
 ----------------*/
-
 template<typename T>
 class TSharedPtr
 {
 public:
-	TSharedPtr() { }
-	TSharedPtr(T* ptr) { Set(ptr); }
+	TSharedPtr() {}
 
-	// 복사
+	// _ptr에 레퍼런스 카운팅을 관리할 포인터를 저장함과 동시에 레퍼런스 카운팅을 위임함
+	TSharedPtr(T* ptr) { Set(ptr); } 
+
+	// 복사 생성자
 	TSharedPtr(const TSharedPtr& rhs) { Set(rhs._ptr); }
-	// 이동
-	TSharedPtr(TSharedPtr&& rhs) { _ptr = rhs._ptr; rhs._ptr = nullptr; }
-	// 상속 관계 복사
+	
+	// 이동 생성자
+	TSharedPtr(TSharedPtr&& rhs) 
+	{ 
+		_ptr = rhs._ptr; 
+		rhs._ptr = nullptr; 
+	}
+	
+	// 상속 관계 복사 생성자 (자식 포인터를 부모 포인터로 업캐스팅하여 복사)
 	template<typename U>
 	TSharedPtr(const TSharedPtr<U>& rhs) { Set(static_cast<T*>(rhs._ptr)); }
 
+	// 포인터가 소멸될 때  Release() 를 호출해 레퍼런스 카운트를 1줄여줌
 	~TSharedPtr() { Release(); }
 
 public:
-	// 복사 연산자
+	// 복사 대입 연산자
 	TSharedPtr& operator=(const TSharedPtr& rhs)
 	{
 		if (_ptr != rhs._ptr)
 		{
-			Release();
+			Release(); // 이전에 할당된 포인터를 해제해줌 ( 카운팅 감소 )
 			Set(rhs._ptr);
 		}
 		return *this;
@@ -68,27 +76,29 @@ public:
 		return *this;
 	}
 
-	bool		operator==(const TSharedPtr& rhs) const { return _ptr == rhs._ptr; }
-	bool		operator==(T* ptr) const { return _ptr == ptr; }
-	bool		operator!=(const TSharedPtr& rhs) const { return _ptr != rhs._ptr; }
-	bool		operator!=(T* ptr) const { return _ptr != ptr; }
-	bool		operator<(const TSharedPtr& rhs) const { return _ptr < rhs._ptr; }
-	T* operator*() { return _ptr; }
-	const T* operator*() const { return _ptr; }
+	bool operator==(const TSharedPtr& rhs) const { return _ptr == rhs._ptr; }
+	bool operator==(T* ptr) const { return _ptr == ptr; }
+	bool operator!=(const TSharedPtr& rhs) const { return _ptr != rhs._ptr; }
+	bool operator!=(T* ptr) const { return _ptr != ptr; }
+	bool operator<(const TSharedPtr& rhs) const { return _ptr < rhs._ptr; }
+	T*			operator*() { return _ptr; }
+	const T*	operator*() const { return _ptr; }
 	operator T* () const { return _ptr; }
-	T* operator->() { return _ptr; }
-	const T* operator->() const { return _ptr; }
+	T*			operator->() { return _ptr; }
+	const T*	operator->() const { return _ptr; }
 
 	bool IsNull() { return _ptr == nullptr; }
 
 private:
+	// 레퍼런스 카운팅을 포인터를 래핑해서 대신 해주는 함수
 	inline void Set(T* ptr)
 	{
 		_ptr = ptr;
 		if (ptr)
-			ptr->AddRef();
+			ptr->AddRef(); // 카운팅 증가
 	}
 
+	// 래퍼런스 카운팅 반납을 포인터를 래핑해서 대신 해주는 함수
 	inline void Release()
 	{
 		if (_ptr != nullptr)
@@ -99,5 +109,5 @@ private:
 	}
 
 private:
-	T* _ptr = nullptr;
+	T* _ptr = nullptr; // reference counting이 지연이 되고 있는 포인터
 };
