@@ -44,9 +44,11 @@ int main()
 	// RefCountBlock(useCount(shared), weakCount(weak))
 	shared_ptr<Knight> spr = make_shared<Knight>();
 	weak_ptr<Knight> wpr = spr; 
-	// ref count block을 참조해서 그 객체가 사라졌는지는 알수있지만 knight의 수명에는 영향이 없는 카운트
-	// shared와 weak는 서로 상호보완해줌
+	// ref count block을 참조해서 그 객체가 사라졌는지는 알수있지만 
+	// knight의 레퍼 카운팅 수명에는 영향이 없는 카운트
+	// - shared와 weak는 서로 상호보완해줌
 
+	// weak_ptr이 자원을 할당받는 방법
 	bool expired = wpr.expired();
 	shared_ptr<Knight> spr2 = wpr.lock();
 

@@ -5,7 +5,6 @@
 /*------------
 Base Allocator
 ------------*/
-
 void* BaseAllocator::Alloc(int32 size)
 {
 	return ::malloc(size);

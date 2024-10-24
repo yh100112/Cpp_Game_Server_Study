@@ -87,6 +87,12 @@
     <ClCompile Include="ref_count_cycle_problem.cpp">
       <Filter>memory</Filter>
     </ClCompile>
+    <ClCompile Include="allocater_test.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="stomp_allocator.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
