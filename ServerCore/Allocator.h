@@ -15,3 +15,10 @@ public:
 Stomp Allocator
 -> 유일한 기능이 버그를 잡는데 유용함
 ------------*/
+class StompAllocator
+{
+	enum { PAGE_SIZE = 0x1000 };
+public:
+	static void* Alloc(int32 size);
+	static void Release(void* ptr);
+};
