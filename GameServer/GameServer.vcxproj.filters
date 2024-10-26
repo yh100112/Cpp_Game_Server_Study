@@ -93,6 +93,18 @@
     <ClCompile Include="stomp_allocator.cpp">
       <Filter>memory</Filter>
     </ClCompile>
+    <ClCompile Include="stl_allocator.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_pool_1.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_pool_2.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="LockFreeStackTest.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -109,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="ConcurrentStack.h">
       <Filter>LockPractice</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeStackTest.h">
+      <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
