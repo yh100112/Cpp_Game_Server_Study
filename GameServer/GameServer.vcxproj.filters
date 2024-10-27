@@ -22,6 +22,9 @@
     <Filter Include="memory">
       <UniqueIdentifier>{f707cab4-1666-4e8b-98c5-bc9be4381921}</UniqueIdentifier>
     </Filter>
+    <Filter Include="typeCasting">
+      <UniqueIdentifier>{bdd237d9-ef98-4029-aa04-53ae35bbbd85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="multi_thread.cpp">
@@ -107,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="memory_pool_3.cpp">
       <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="typecast_test.cpp">
+      <Filter>typeCasting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
