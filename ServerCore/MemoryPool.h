@@ -1,5 +1,10 @@
 #pragma once
 
+enum
+{
+	SLIST_ALLIGNMENT = 16
+};
+
 // 정책
 // 메모리 풀을 여러개 만들거임
 // [32바이트 이하 데이터들 관리하는 메모리 풀][32 초과 64 이하 관리..][ ][ ][][][][]
@@ -8,7 +13,8 @@
 /*---------------
 	MemoryHeader
 ----------------*/
-struct MemoryHeader
+DECLSPEC_ALIGN(SLIST_ALLIGNMENT)
+struct MemoryHeader : public SLIST_ENTRY
 {
 	// [MemoryHeader][Data]
 	MemoryHeader(int32 size) : allocSize(size) { }
@@ -36,6 +42,7 @@ struct MemoryHeader
 /*---------------
 	MemoryPool
 ----------------*/
+DECLSPEC_ALIGN(SLIST_ALLIGNMENT)
 class MemoryPool
 {
 public:
@@ -46,10 +53,11 @@ public:
 	MemoryHeader* Pop(); // 메모리 풀에서 써야 할 메모리를 가져옴
 
 private:
-	int32 _allocSize = 0;
-	atomic<int32> _allocCount = 0;
+	SLIST_HEADER	_header; // lock -free stack을 관리하는 헤더 -> _queue 필요 x
+	int32			_allocSize = 0;
+	atomic<int32>	_allocCount = 0;
 
-	USE_LOCK;
-	queue<MemoryHeader*> _queue;
+	//USE_LOCK;
+	//queue<MemoryHeader*> _queue;
 };
 

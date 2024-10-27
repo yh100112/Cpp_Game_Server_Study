@@ -102,7 +102,10 @@
     <ClCompile Include="memory_pool_2.cpp">
       <Filter>memory</Filter>
     </ClCompile>
-    <ClCompile Include="LockFreeStackTest.cpp">
+    <ClCompile Include="lockfreestack_memory.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_pool_3.cpp">
       <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,7 +125,10 @@
     <ClInclude Include="ConcurrentStack.h">
       <Filter>LockPractice</Filter>
     </ClInclude>
-    <ClInclude Include="LockFreeStackTest.h">
+    <ClInclude Include="ConcurrentStack_2.h">
+      <Filter>LockPractice</Filter>
+    </ClInclude>
+    <ClInclude Include="lockfreestack_memory.h">
       <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
