@@ -52,6 +52,9 @@ private:
 	condition_variable _condVar;
 };
 
+// LockFreeStack이 락을 안 잡는다는게 아님. 명시적으로 안 잡을 뿐이지 CAS로 처리함
+// 정말 운이 나쁘면 어떤 스레드가 계속 트라이해도 다른 스레드에 의해 계속 CAS에서 라이브 락(데드락이라고 하진 않음)
+// 상태로 넘어가지 못하게 된다.
 template<typename T>
 class LockFreeStack
 {
@@ -76,19 +79,21 @@ public:
 		// _head = node;
 
 		// CAS
-		/*if (_head == node->next) // 중간에 다른 스레드가 들어와서 _head를 변경하지 않은 경우 stack의 맨 앞인 head를 현재 추가한 node로 변경
+		// 중간에 다른 스레드 때문에 _head가 변경되지 않은 경우 stack 맨 앞 head를 현재 추가한 node로 변경
+		/*if (_head == node->next) 
 		{
 			_head = node;
 			return true;
 		}
-		else // 중간에 다른 스레드가 들어와서 _head가 변경된 경우 현재 추가한 노드의 다음을 head로 다시 바꾸고 루프 반복
+		// 중간에 다른 스레드 때문에 _head가 변경된 경우 현재 추가한 노드의 다음을 head로 다시 바꾸고 루프 반복
+		else 
 		{
 			node->next = _head;
 			return false;
 		}*/
-		while (_head.compare_exchange_weak(node->next, node) == false) // atomic하게 체크와 푸시를 같이 해주는 함수
-		{
-		}
+		// _head랑 expected(node-next)랑 같으면 노드 삽입, 다르면 처음상태로 돌리고 무한루프
+		// atomic하게 체크와 푸시를 같이 해주는 함수
+		while (_head.compare_exchange_weak(node->next, node) == false) {}
 	}
 
 	// 1) head읽기
@@ -102,29 +107,36 @@ public:
 
 		Node* oldHead = _head;
 
-		 // CAS
-		/*if (_head == oldHead) // 중간에 다른 스레드가 가로채지 않아서 oldHead가 현재 헤드인 경우 현재 헤드를 다음 노드로 바꾼 후 루프 종료
+		// CAS
+		// 중간에 다른 스레드가 가로채지 않아서 oldHead가 현재 헤드인 경우 현재 헤드를 다음 노드로 바꾼 후 루프 종료
+		/*if (_head == oldHead) 
 		{
 			_head = oldHead->next;
 			return true;
 		}
-		else { // 중간에 다른 스레드가 가로채서 oldHead의 값이 달라진 경우 oldHead를 현재 헤드로 바꾸고 루프 반복
+		// 중간에 다른 스레드가 가로채서 oldHead의 값이 달라진 경우 oldHead를 현재 헤드로 바꾸고 루프 반복
+		else {
 			oldHead = _head;
 			return false;
 		}*/
-		while (oldHead && _head.compare_exchange_weak(oldHead, oldHead->next) == false)
-		{
-		}
+		while (oldHead && _head.compare_exchange_weak(oldHead, oldHead->next) == false) {}
 
 		if (oldHead == nullptr) {
 			--_popCount;
 			return false;
 		}
 
-		value = oldHead->data; // oldHead를 팝!!
-		// 잠시 삭제 보류 ( 멀티스레드에서 누군가가 동시에 해당 포인터를 참조할 경우 메모리를 날리면 참조 에러 발생할 수 있음 - 따로 해당 부분 처리 필요! )
+		value = oldHead->data; // oldHead를 pop
+
+		
 		// delete oldHead;
+		// 이렇게 삭제하면 문제 발생 
+		// - 멀티스레드에서 누가 동시에 해당 포인터를 참조할 경우 
+		//   메모리를 날리면 참조 에러 발생할 수 있음 - 따로 해당 부분 처리 필요!
+		// C#이나 java라면 메모리 삭제는 언젠가 알아서 일어나니 신경도 안써도 되지만 c++은 다르다.
+
 		TryDelete(oldHead);
+
 		return true;
 	}
 
