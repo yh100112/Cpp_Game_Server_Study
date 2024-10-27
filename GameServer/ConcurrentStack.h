@@ -135,6 +135,7 @@ public:
 		//   메모리를 날리면 참조 에러 발생할 수 있음 - 따로 해당 부분 처리 필요!
 		// C#이나 java라면 메모리 삭제는 언젠가 알아서 일어나니 신경도 안써도 되지만 c++은 다르다.
 
+		// 누군가 이 head 메모리를 참조하고 있지 않다면 삭제해주자!
 		TryDelete(oldHead);
 
 		return true;
@@ -148,6 +149,7 @@ public:
 			// 나 혼자네?
 			
 			// 이왕 혼자인거, 삭제 예약된 다른 데이터들도 삭제해보자
+			// pendingList가 nullptr로 밀리고 node에 기존 데이터가 들어감
 			Node* node = _pendingList.exchange(nullptr);
 
 			if (--_popCount == 0)
@@ -173,6 +175,14 @@ public:
 		}
 	}
 
+	void ChainPendingNodeList(Node* node)
+	{
+		Node* last = node;
+		while (last->next)
+			last = last->next;
+
+		ChainPendingNodeList(node, last);
+	}
 	
 	void ChainPendingNodeList(Node* first, Node* last)
 	{
@@ -181,15 +191,6 @@ public:
 		while (_pendingList.compare_exchange_weak(last->next, first) == false)
 		{
 		}
-	}
-
-	void ChainPendingNodeList(Node* node)
-	{
-		Node* last = node;
-		while (last->next)
-			last = last->next;
-
-		ChainPendingNodeList(node, last);
 	}
 
 	void ChainPendingNode(Node* node)
