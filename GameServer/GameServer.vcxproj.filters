@@ -114,6 +114,9 @@
     <ClCompile Include="typecast_test.cpp">
       <Filter>typeCasting</Filter>
     </ClCompile>
+    <ClCompile Include="socket_server_1.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
