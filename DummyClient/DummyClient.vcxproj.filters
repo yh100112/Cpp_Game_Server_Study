@@ -7,13 +7,22 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{fbbd29fb-86e8-4223-905a-3fcd75456ed4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="socket">
+      <UniqueIdentifier>{4649fb95-5852-449d-8c90-ef6ac376aef0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="socket_client_1.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_client_1.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_client_2_udp.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_client_3.cpp">
+      <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

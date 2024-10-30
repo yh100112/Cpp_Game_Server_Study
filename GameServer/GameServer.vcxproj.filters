@@ -25,6 +25,9 @@
     <Filter Include="typeCasting">
       <UniqueIdentifier>{bdd237d9-ef98-4029-aa04-53ae35bbbd85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="socket">
+      <UniqueIdentifier>{06ebbeda-4763-4a49-88bf-d6b3ea2ab004}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="multi_thread.cpp">
@@ -115,7 +118,13 @@
       <Filter>typeCasting</Filter>
     </ClCompile>
     <ClCompile Include="socket_server_1.cpp">
-      <Filter>Main</Filter>
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_server_2_udp.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_server_3.cpp">
+      <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
