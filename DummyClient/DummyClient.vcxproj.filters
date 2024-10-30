@@ -21,7 +21,10 @@
     <ClCompile Include="socket_client_2_udp.cpp">
       <Filter>socket</Filter>
     </ClCompile>
-    <ClCompile Include="socket_client_3.cpp">
+    <ClCompile Include="socket_client_3_nonblock.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="select_client.cpp">
       <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>

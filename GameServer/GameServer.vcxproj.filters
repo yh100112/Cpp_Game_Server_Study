@@ -123,7 +123,10 @@
     <ClCompile Include="socket_server_2_udp.cpp">
       <Filter>socket</Filter>
     </ClCompile>
-    <ClCompile Include="socket_server_3.cpp">
+    <ClCompile Include="socket_server_3_nonblock.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="select_server.cpp">
       <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
