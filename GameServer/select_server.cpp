@@ -72,12 +72,12 @@ int main()
 	// 3) 적어도 하나의 소켓이 준비되면 리턴 -> 낙오자는 알아서 제거됨
 	// 4) 남은 소켓 체크해서 진행
 
-	// 만드는 방법 예시
-	// fd_set set; 
-	// FD_ZERO	: 비운다				ex) FD_ZERO(set);
-	// FD_SET	: 소켓 s를 넣는다		ex) FD_SET(s, &set);
-	// FD_CLR	: 소켓 s를 제거		ex) FD_CLR(s, &set);
-	// FD_ISSET : 소켓 s가 set에 들어있으면 0이 아닌 값을 리턴한다
+	 //만드는 방법 예시
+	 //fd_set set; 
+	 //FD_ZERO	: 비운다				ex) FD_ZERO(set);
+	 //FD_SET	: 소켓 s를 넣는다		ex) FD_SET(s, &set);
+	 //FD_CLR	: 소켓 s를 제거		ex) FD_CLR(s, &set);
+	 //FD_ISSET : 소켓 s가 set에 들어있으면 0이 아닌 값을 리턴한다
 
 
 	vector<Session> sessions;
@@ -111,7 +111,7 @@ int main()
 		// [옵션] 마지막 timeout 인자 설정 가능
 		// 하나라도 준비가 된 애가 있으면 return해주고 아니면 여기서 무한 대기 ( 마지막 인자인 시간을 null로 했으니 )
 		// -> 반환될 때 적합하지 않은 애들은 낙오자로 제거해서 실제 여길 통과하면 준비가 된 애들만 남게 된다.
-		int32 retVal = ::select(0, &reads, &writes, nullptr, nullptr);
+		int32 retVal = ::select(0, &reads, &writes, nullptr, nullptr); // 내부는 동기 방식이다 -> 여기서 대기하므로
 		if (retVal == SOCKET_ERROR)
 			break;
 

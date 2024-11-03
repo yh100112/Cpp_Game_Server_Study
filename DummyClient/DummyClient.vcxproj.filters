@@ -27,6 +27,9 @@
     <ClCompile Include="select_client.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="wsa_event_select_client.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
