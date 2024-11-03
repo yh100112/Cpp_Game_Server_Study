@@ -132,6 +132,12 @@
     <ClCompile Include="wsa_event_select_server.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="overlapped_server.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="overlapped_callback_server.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

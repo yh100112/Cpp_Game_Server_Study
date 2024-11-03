@@ -30,6 +30,12 @@
     <ClCompile Include="wsa_event_select_client.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="overlapped_client.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="overlapped_callback_client.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
