@@ -138,6 +138,12 @@
     <ClCompile Include="overlapped_callback_server.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="completion_port_server.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket_Utils_test_server.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
