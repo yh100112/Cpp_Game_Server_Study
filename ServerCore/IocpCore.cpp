@@ -21,6 +21,7 @@ bool IocpCore::Register(IocpObject* iocpObject)
 // worker thread들이 일감이 있는지 두리번두리번 거리면 찾는다.
 bool IocpCore::Dispatch(uint32 timeoutMs)
 {
+	std::cout << "commit test" << std::endl;
 	DWORD numOfBytes = 0;
 	IocpObject* iocpObject = nullptr;
 	IocpEvent* iocpEvent = nullptr;
