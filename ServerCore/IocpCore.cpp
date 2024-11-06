@@ -18,7 +18,7 @@ bool IocpCore::Register(IocpObject* iocpObject)
 	return ::CreateIoCompletionPort(iocpObject->GetHandle(), _iocpHandle, reinterpret_cast<ULONG_PTR>(iocpObject), 0);
 }
 
-// worker thread들이 일감이 있는지 두리번두리번 거리면 찾는다.
+// worker thread들이 일감이 있는지 두리번두리번 거리면 찾는다...
 bool IocpCore::Dispatch(uint32 timeoutMs)
 {
 	std::cout << "commit test" << std::endl;
