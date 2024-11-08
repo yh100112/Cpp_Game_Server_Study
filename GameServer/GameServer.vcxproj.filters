@@ -144,6 +144,9 @@
     <ClCompile Include="Socket_Utils_test_server.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="IocpCoreTestServer.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

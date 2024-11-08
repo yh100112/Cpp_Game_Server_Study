@@ -2,6 +2,9 @@
 #include "IocpCore.h"
 #include "IocpEvent.h"
 
+// temp
+IocpCore GlocpCore;
+
 IocpCore::IocpCore()
 {
 	_iocpHandle = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
@@ -27,6 +30,7 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
 	IocpEvent* iocpEvent = nullptr;
 
 	// 성공하면 iocpObject와 iocpEvent를 성공적으로 복원한 상태로 빠져나온 상태
+	// 성공 -> 일감이 있어서 빠져나오면 iocpObject->Dispatch를 실행!ㄴ
 	if (::GetQueuedCompletionStatus(_iocpHandle, OUT & numOfBytes, OUT reinterpret_cast<PULONG_PTR>(&iocpObject), OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
 	{
 		iocpObject->Dispatch(iocpEvent, numOfBytes);
