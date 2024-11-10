@@ -1,8 +1,5 @@
 #pragma once
 
-/*--------------
-	IocpObject
----------------*/
 class IocpObject
 {
 public:
@@ -10,9 +7,6 @@ public:
 	virtual void Dispatch(class IocpEvent* iocpEvent, int32 numOfBytes = 0) abstract;
 };
 
-/*--------------
-	IocpCore
----------------*/
 class IocpCore
 {
 public:

@@ -25,4 +25,4 @@ using LockGuard = std::lock_guard<std::mutex>;
 #define len16(arr)		static_cast<int16>(sizeof(arr) / sizeof(arr[0]))
 #define len32(arr)		static_cast<int32>(sizeof(arr) / sizeof(arr[0]))
 
-#define _STOMP
+#define _STOMP // 라이브러리 만들 때 이걸 켜놓고 해야 오류를 잡기 좋음
