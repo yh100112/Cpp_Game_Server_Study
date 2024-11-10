@@ -7,7 +7,7 @@ IocpCore GlocpCore;
 
 IocpCore::IocpCore()
 {
-	_iocpHandle = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
+	_iocpHandle = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0); // 처음 CP 생성
 	ASSERT_CRASH(_iocpHandle != INVALID_HANDLE_VALUE);
 }
 
@@ -16,23 +16,36 @@ IocpCore::~IocpCore()
 	::CloseHandle(_iocpHandle);
 }
 
+// CP에 관찰할 대상(IocpObject)을 등록
 bool IocpCore::Register(IocpObject* iocpObject)
 {
-	return ::CreateIoCompletionPort(iocpObject->GetHandle(), _iocpHandle, reinterpret_cast<ULONG_PTR>(iocpObject), 0);
+	// SOCKET socket;
+	//return ::CreateIoCompletionPort(socket, _iocpHandle, /*key*/0, 0);
+
+	// Ciocp()가 꼭 session만 넣는 용도로만 사용할 수 있는 게 아니다.
+	// 꼭 네트워크 정보(socket, session..) 등이 아니더라도 다양한 용도로 사용할 수 있기 때문에
+	// 그걸 광범위하게 만들어줄 수 있도록 IocpObject로 만들어서 관리하기로 하자!
+	// Ciocp()에 담을 수 있는 것은 iocpObject를 상속받아서 만들어서 넣도록 하자
+	// 첫번째 인자 : 생성한 TCP 소켓을 반환함
+	// 세번째 인자 : IocpObject가 하는 일이 session과 같은 역할이므로 해당 포인터 주소 값을 키로 넣어준다.
+	return ::CreateIoCompletionPort(iocpObject->GetHandle(), _iocpHandle, 
+		reinterpret_cast<ULONG_PTR>(iocpObject), 0);
 }
 
-// worker thread들이 일감이 있는지 두리번두리번 거리면 찾는다...
+// worker thread들이 일감이 있는지 두리번두리번 찾는다.
 bool IocpCore::Dispatch(uint32 timeoutMs)
 {
-	std::cout << "commit test" << std::endl;
-	DWORD numOfBytes = 0;
-	IocpObject* iocpObject = nullptr;
-	IocpEvent* iocpEvent = nullptr;
+	DWORD numOfBytes = 0; // 송신 혹은 수신된 바이트 크기
+	IocpObject* iocpObject = nullptr; // 복원할 정보
+	IocpEvent* iocpEvent = nullptr; // 복원할 정보
 
-	// 성공하면 iocpObject와 iocpEvent를 성공적으로 복원한 상태로 빠져나온 상태
-	// 성공 -> 일감이 있어서 빠져나오면 iocpObject->Dispatch를 실행!ㄴ
-	if (::GetQueuedCompletionStatus(_iocpHandle, OUT & numOfBytes, OUT reinterpret_cast<PULONG_PTR>(&iocpObject), OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
+	// 성공하면 두가지 정보를 넣어서 보냈던 iocpObject와 iocpEvent 정보를 복원해줌
+	// 우리의 일꾼(worker thread)들이 여기에서 전부 무한정 대기를 탈 것임
+	if (::GetQueuedCompletionStatus(_iocpHandle, OUT &numOfBytes, OUT reinterpret_cast<PULONG_PTR>(&iocpObject), 
+		OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
 	{
+		// 일감이 있어서 1개 스레드가 깨서 들어온 것이므로 iocpObject->Dispatch를 실행
+		// Listener 클래스가 IocpOjbect를 상속받아서 Dispatch를 오버라이딩하므로 Listener::Dispatch()를 호출
 		iocpObject->Dispatch(iocpEvent, numOfBytes);
 	}
 	else
@@ -49,6 +62,5 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
 		}
 	}
 
-
-	return false;
+	return true;
 }

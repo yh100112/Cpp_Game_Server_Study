@@ -4,7 +4,7 @@
 
 Session::Session()
 {
-	_socket = SocketUtils::CreateSocket();
+	_socket = SocketUtils::CreateSocket(); // tcp 소켓 한 개 만듬
 }
 
 Session::~Session()
@@ -20,4 +20,5 @@ HANDLE Session::GetHandle()
 void Session::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 {
 	// TODO
+	// iocpEvent가 recv나 send 이벤트를 만들어서 이걸 처리할 때 이 부분으로 들어와서 처리해줌
 }
