@@ -1,9 +1,5 @@
 #pragma once
 
-
-/*------------
-	NetAddress
--------------*/
 class NetAddress
 {
 public:

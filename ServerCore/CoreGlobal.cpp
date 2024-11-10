@@ -17,13 +17,13 @@ public:
 		GThreadManager = new ThreadManager();
 		GMemory = new Memory();
 		GDeadLockProfiler = new DeadLockProfiler();
-		SocketUtils::Init();
+		SocketUtils::Init(); // 윈속 초기화를 여기서 해줌
 	}
 	~CoreGlobal()
 	{
 		delete GThreadManager;
 		delete GMemory;
 		delete GDeadLockProfiler;
-		SocketUtils::Clear();
+		SocketUtils::Clear(); // init과 짝을 맞춤
 	}
 } GCoreGlobal;
