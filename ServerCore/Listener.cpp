@@ -93,11 +93,12 @@ void Listener::ProcessAccept(AcceptEvent* acceptEvent)
 		return;
 	}
 	
+	// 여기까지 왔다는 건 세션이 성공적으로 접속되어 커넥션이 맺어짐
 	session->SetNetAddress(NetAddress(sockAddress));
+	//cout << "Client Connected!" << endl;
 
-	cout << "Client Connected!" << endl;
-
-	// TODO
+	// 여기서 session의 함수를 호출해줌
+	session->ProcessConnect();
 
 	RegisterAccept(acceptEvent);
 }

@@ -44,8 +44,7 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
 
 	// 성공하면 두가지 정보를 넣어서 보냈던 iocpObject와 iocpEvent 정보를 복원해줌
 	// 우리의 일꾼(worker thread)들이 여기에서 전부 무한정 대기를 탈 것임
-	if (::GetQueuedCompletionStatus(_iocpHandle, OUT &numOfBytes, OUT &key, 
-		OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
+	if (::GetQueuedCompletionStatus(_iocpHandle, OUT &numOfBytes, OUT &key, OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
 	{
 		// 일감이 있어서 1개 스레드가 깨서 들어온 것이므로 iocpObject->Dispatch를 실행
 		// Listener 클래스가 IocpOjbect를 상속받아서 Dispatch를 오버라이딩하므로 Listener::Dispatch()를 호출
