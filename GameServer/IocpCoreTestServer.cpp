@@ -10,6 +10,11 @@
 #include "Service.h"
 #include "Session.h"	
 
+class GameSession : public Session
+{
+
+};
+
 int main()
 {
 	ServerServiceRef service = MakeShared<ServerService>(

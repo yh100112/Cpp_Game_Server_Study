@@ -24,9 +24,9 @@ public:
 	virtual void Dispatch(class IocpEvent* iocpEvent, int32 numOfBytes = 0) override;
 
 private:
-	/*수신 관련*/
-	void RegisterAccept(AcceptEvent* acceptEvent);
-	void ProcessAccept(AcceptEvent* acceptEvent);
+	/*수신 관련 -  둘이 짝꿍 */
+	void RegisterAccept(AcceptEvent* acceptEvent); // 비동기 함수를 걸어주는 역할을 함
+	void ProcessAccept(AcceptEvent* acceptEvent);  // RegisterAccept()가 성공적으로 들어오면 실행
 
 protected:
 	SOCKET _socket = INVALID_SOCKET;
