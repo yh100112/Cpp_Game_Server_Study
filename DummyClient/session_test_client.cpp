@@ -4,18 +4,28 @@
 #include "Service.h"
 #include "Session.h"	
 
-class GameSession : public Session
+char sendBuffer[] = "Hello World";
+
+class ServerSession : public Session
 {
 public:
-	~GameSession()
+	~ServerSession()
 	{
-		cout << "~GameSession" << endl;
+		cout << "~ServerSession" << endl;
 	}
+	virtual void OnConnected() override
+	{
+		cout << "Connected To Server" << endl;
+		Send((BYTE*)sendBuffer, sizeof(sendBuffer));
+	}
+
 	virtual int32 OnRecv(BYTE* buffer, int32 len) override
 	{
-		// echo
 		cout << "OnRecv Len = " << len << endl;
-		Send(buffer, len);
+
+		this_thread::sleep_for(1s);
+
+		Send((BYTE*)sendBuffer, sizeof(sendBuffer));
 		return len;
 	}
 
@@ -23,20 +33,26 @@ public:
 	{
 		cout << "OnSend Len = " << len << endl;
 	}
+	
+	virtual void OnDisconnected() override
+	{
+		cout << "Disconnected" << endl;
+	}
 };
 
 int main()
 {
-	ServerServiceRef service = MakeShared<ServerService>(
+	this_thread::sleep_for(1s);
+
+	ClientServiceRef service = MakeShared<ClientService>(
 		NetAddress(L"127.0.0.1", 7777),
 		MakeShared<IocpCore>(),
-		MakeShared<GameSession>,
-		100  // 동접 100개 예약해달라
+		MakeShared<ServerSession>,
+		1 // client 1명
 	);
 
 	ASSERT_CRASH(service->Start());
-
-	// iocp에 들어온 애를 감지하는 worker thread 
+	
 	for (int32 i = 0; i < 5; i++)
 	{
 		GThreadManager->Launch([=]()
