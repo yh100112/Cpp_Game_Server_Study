@@ -28,17 +28,27 @@ void Session::Send(BYTE* buffer, int32 len)
 	RegisterSend(sendEvent);
 }
 
+// 서버끼리 연결할 때는 이 세션이 상대방 서버를 의미
+// 이걸 통해 상대방 서버에 붙어야 함
+bool Session::Connect()
+{
+	return RegisterConnect();
+}
+
 void Session::Disconnect(const WCHAR* cause)
 {
+	// 한 번만 호출되도록 막아줌
 	if (_connected.exchange(false) == false)
 		return;
 
 	// TEMP
 	wcout << "Disconnect : " << cause << endl;
 
-	OnDisconnected(); // 컨텐츠 코드에서 오버로딩
+	OnDisconnected(); // 컨텐츠 코드에서 재정의
 	SocketUtils::Close(_socket);
 	GetService()->ReleaseSession(GetSessionRef());
+
+	RegisterDisconnect();
 }
 
 HANDLE Session::GetHandle()
@@ -54,6 +64,9 @@ void Session::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 	case EventType::Connect:
 		ProcessConnect();
 		break;
+	case EventType::DisConnect:
+		ProcessDisConnect();
+		break;
 	case EventType::Recv:
 		ProcessRecv(numOfBytes);
 		break;
@@ -65,13 +78,61 @@ void Session::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 	}
 }
 
-void Session::RegisterConnect()
+bool Session::RegisterConnect()
 {
+	if (IsConnected())
+		return false;
+
+	if (GetService()->GetServiceType() != ServiceType::Client)
+		return false;
+
+	if (SocketUtils::SetReuseAddress(_socket, true) == false)
+		return false;
+
+	if (SocketUtils::BindAnyAddress(_socket, 0/*남는거 아무거나 전부 접속 가능*/) == false)
+		return false;
+
+	_connectEvent.Init();
+	_connectEvent.owner = shared_from_this(); // ADD_REF
+
+	DWORD numOfBytes = 0;
+	SOCKADDR_IN sockAddr = GetService()->GetNetAddress().GetSockAddr();
+	if (false == SocketUtils::ConnectEx(_socket, reinterpret_cast<SOCKADDR*>(&sockAddr), sizeof(sockAddr), nullptr, 0, &numOfBytes, &_connectEvent))
+	{
+		int32 errorCode = ::WSAGetLastError();
+		if (errorCode != WSA_IO_PENDING)
+		{
+			_connectEvent.owner = nullptr; // RELEASE_REF
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Session::RegisterDisconnect()
+{
+	_disconnectEvent.Init();
+	_disconnectEvent.owner = shared_from_this(); // ADD_REF
+
+	if (SocketUtils::DisconnectEx(_socket, &_disconnectEvent, TF_REUSE_SOCKET, 0) == false)
+	{
+		int32 errorCode = ::WSAGetLastError();
+		if (errorCode != WSA_IO_PENDING)
+		{
+			_disconnectEvent.owner = nullptr; // RELEASE_REF
+			return false;
+		}
+	}
+
+	return true;
 }
 
 // Listener에서 커넥션까지 들어오는데 성공했으니 커넥션을 맺어라
 void Session::ProcessConnect()
 {
+	_connectEvent.owner = nullptr; // RELEASE_REF
+
 	_connected.store(true);
 
 	// 서비스에 세션 등록
@@ -82,6 +143,11 @@ void Session::ProcessConnect()
 
 	// 수신 등록 ( 처음 한 번 무조건 호출 필요! - 낚싯대를 물에 던져 놓는 것 )
 	RegisterRecv();
+}
+
+void Session::ProcessDisConnect()
+{
+	_disconnectEvent.owner = nullptr; // RELEASE_REF
 }
 
 void Session::RegisterRecv()
