@@ -3,7 +3,7 @@
 #include "SocketUtils.h"
 #include "Service.h"
 
-Session::Session()
+Session::Session() : _recvBuffer(BUFFER_SIZE)
 {
 	_socket = SocketUtils::CreateSocket(); // tcp 소켓 한 개 만듬
 }
@@ -150,6 +150,12 @@ void Session::ProcessDisConnect()
 	_disconnectEvent.owner = nullptr; // RELEASE_REF
 }
 
+// recv는 멀티스레드를 고려하지 않아도 됨
+// 실질적으로 한 번에 한 스레드만 registerrecv(), processrecv()에 들어옴
+// recv 받을게 조금이라도 있으면 완료 통지가 IocpCore::Dispatch()의 GetQueueCompletionStatus로 올 것임
+// 그러면 Dispatch를 타고 ProcessRevc까지 올 것임
+// 여기서 다 끝난 다음에서야 다음 낚싯대를 던져서 다음 등록을 해줌 (RegisterRecv)
+// -> 그러므로 낚싯대는 1개이므로 1개의 스레드만 실행할 수 있어서 멀티스레드 문제가 없음
 void Session::RegisterRecv()
 {
 	if (IsConnected() == false)
@@ -159,11 +165,12 @@ void Session::RegisterRecv()
 	_recvEvent.owner = shared_from_this(); // ADD_REF
 
 	WSABUF wsaBuf;
-	wsaBuf.buf = reinterpret_cast<char*>(_recvBuffer);
-	wsaBuf.len = len32(_recvBuffer);
+	wsaBuf.buf = reinterpret_cast<char*>(_recvBuffer.WritePos()); // w 커서 위치에 데이터를 써내려감
+	wsaBuf.len = _recvBuffer.FreeSize(); // 최대로 받을 수 있는 크기가 얼마인지를 의미
 
 	DWORD numOfBytes = 0;
 	DWORD flags = 0;
+	// 여기를 통과하면 ProcessRecv()에 들어옴
 	if (::WSARecv(_socket, &wsaBuf, 1, OUT &numOfBytes, OUT &flags, &_recvEvent, nullptr) == SOCKET_ERROR)
 	{
 		int32 errorCode = ::WSAGetLastError();
@@ -208,8 +215,29 @@ void Session::ProcessRecv(int32 numOfBytes)
 		return;
 	}
 
-	// 수신 등록
-	OnRecv(_recvBuffer, numOfBytes);
+	// 여기 들어온 건 성공적으로 우리의 버퍼에 데이터가 복사되었다는 뜻
+
+	// numOfBytes만큼 w 커서를 앞으로 이동시킴
+	if (_recvBuffer.OnWrite(numOfBytes) == false)
+	{
+		Disconnect(L"OnWrite Overflow");
+		return;
+	}
+
+	int32 dataSize = _recvBuffer.DataSize();
+
+	// 컨텐츠 쪽에서 받은 데이터 중 처리한 데이터 길이를 반환해줌
+	int32 processLen = OnRecv(_recvBuffer.ReadPos(), dataSize); // 컨텐츠 코드에서 재정의
+
+	// 컨텐츠 쪽에서 처리한 데이터 길이만큼 r 커서를 앞으로 이동시킴
+	if (processLen < 0 || dataSize < processLen || _recvBuffer.OnRead(processLen) == false)
+	{
+		Disconnect(L"OnRead Overflow");
+		return;
+	}
+
+	// 커서 정리
+	_recvBuffer.Clean();
 
 	// 수신 등록 ( 연결이 처리되고 모든 작업이 끝났으므로 다시 낚시대를 던져서 다음 연결을 받을 준비함 )
 	RegisterRecv();

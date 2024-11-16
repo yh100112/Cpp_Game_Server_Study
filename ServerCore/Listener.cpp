@@ -114,7 +114,7 @@ void Listener::RegisterAccept(AcceptEvent* acceptEvent)
 	
 	DWORD bytesReceived = 0;
 	// 비동기 accept를 걸어주는 부분
-	if (SocketUtils::AcceptEx(_socket, session->GetSocket(), session->_recvBuffer, 0, sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, OUT &bytesReceived, static_cast<LPOVERLAPPED>(acceptEvent)) == false)
+	if (SocketUtils::AcceptEx(_socket, session->GetSocket(), session->_recvBuffer.WritePos(), 0, sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, OUT & bytesReceived, static_cast<LPOVERLAPPED>(acceptEvent)) == false)
 	{
 		const int32 errorCode = ::WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING) // 팬딩이 아닌 경우에 여기 들어오면 다시 accept 걸어줌 - 낚시대 던지는 행위
