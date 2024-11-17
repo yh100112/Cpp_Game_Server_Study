@@ -147,6 +147,12 @@
     <ClCompile Include="IocpCoreTestServer.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="GameSessionManager.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSession.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -169,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="lockfreestack_memory.h">
       <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSessionManager.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSession.h">
+      <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

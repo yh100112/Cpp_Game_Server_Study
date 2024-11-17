@@ -45,6 +45,9 @@
     <ClCompile Include="session_test_client.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="send_recv_buffer_session_client.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
