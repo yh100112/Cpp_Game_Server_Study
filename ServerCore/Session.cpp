@@ -15,12 +15,22 @@ Session::~Session()
 
 void Session::Send(SendBufferRef sendBuffer)
 {
+	if (IsConnected() == false)
+		return;
+
+	bool registerSend = false; // 스택메모리에 내가 보내야 될지 여부
+
 	// 현재 RegisterSend가 걸리지 않은 상태라면, 걸어준다.
-	WRITE_LOCK;
+	{
+		WRITE_LOCK;
 
-	_sendQueue.push(sendBuffer); // 보낼 데이터를 쌓아놓음
+		_sendQueue.push(sendBuffer); // 보낼 데이터를 쌓아놓음
 
-	if (_sendRegistered.exchange(true) == false)
+		if (_sendRegistered.exchange(true) == false)
+			registerSend = true;
+	}
+
+	if (registerSend)
 		RegisterSend();
 }
 
@@ -39,10 +49,6 @@ void Session::Disconnect(const WCHAR* cause)
 
 	// TEMP
 	wcout << "Disconnect : " << cause << endl;
-
-	OnDisconnected(); // 컨텐츠 코드에서 재정의
-	SocketUtils::Close(_socket);
-	GetService()->ReleaseSession(GetSessionRef());
 
 	RegisterDisconnect();
 }
@@ -144,6 +150,9 @@ void Session::ProcessConnect()
 void Session::ProcessDisConnect()
 {
 	_disconnectEvent.owner = nullptr; // RELEASE_REF
+
+	OnDisconnected(); // 컨텐츠 코드에서 재정의
+	GetService()->ReleaseSession(GetSessionRef());
 }
 
 // recv는 멀티스레드를 고려하지 않아도 됨
@@ -305,4 +314,45 @@ void Session::HandleError(int32 errorCode)
 		cout << "Handle Error : " << errorCode << endl;
 		break;
 	}
+}
+
+/*-------------
+	PacketSession
+-------------*/
+PacketSession::PacketSession()
+{
+}
+
+PacketSession::~PacketSession()
+{
+}
+
+// [size(2byte)][id(2byte)][data.....][size(2byte)][id(2byte)][data.....]
+// size = data + PacketHeader를 넣어줌
+// 완전체로 조립된 패킷이 왔다고 확신할 수 있도록 패킷을 조립해주는 함수
+int32 PacketSession::OnRecv(BYTE* buffer, int32 len)
+{
+	int32 processLen = 0;
+
+	// packet 1개씩 계속 처리 : [size(2byte)][id(2byte)][data.....]
+	while (true)
+	{
+		int32 dataSize = len - processLen;
+		// 최소한 헤더는 파싱할 수 있어야 한다 ( 4byte )
+		if (dataSize < sizeof(PacketHeader))
+			break;
+
+		PacketHeader header = *(reinterpret_cast<PacketHeader*>(&buffer[processLen]));
+		
+		// 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
+		if (dataSize < header.size)
+			break;
+
+		// 패킷 조립 성공
+		OnRecvPacket(&buffer[0], header.size);
+
+		processLen += header.size;
+	}
+
+	return processLen;
 }
