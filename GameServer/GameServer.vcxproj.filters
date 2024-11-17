@@ -144,13 +144,16 @@
     <ClCompile Include="Socket_Utils_test_server.cpp">
       <Filter>socket</Filter>
     </ClCompile>
-    <ClCompile Include="IocpCoreTestServer.cpp">
+    <ClCompile Include="DummyServer.cpp">
       <Filter>socket</Filter>
     </ClCompile>
     <ClCompile Include="GameSessionManager.cpp">
       <Filter>socket</Filter>
     </ClCompile>
     <ClCompile Include="GameSession.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerPacketHandler.cpp">
       <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
@@ -180,6 +183,9 @@
       <Filter>socket</Filter>
     </ClInclude>
     <ClInclude Include="GameSession.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerPacketHandler.h">
       <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>
