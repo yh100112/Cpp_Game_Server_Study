@@ -13,19 +13,15 @@ Session::~Session()
 	SocketUtils::Close(_socket);
 }
 
-void Session::Send(BYTE* buffer, int32 len)
+void Session::Send(SendBufferRef sendBuffer)
 {
-	// 생각할 문제
-	// 1) 버퍼 관리?
-	// 2) sendEvent 관리? 여러개? WSASend 중첩?
+	// 현재 RegisterSend가 걸리지 않은 상태라면, 걸어준다.
+	WRITE_LOCK;
 
-	// TEMP
-	SendEvent* sendEvent = xnew<SendEvent>();
-	sendEvent->owner = shared_from_this(); // ADD_REF
-	sendEvent->buffer.resize(len);
-	::memcpy(sendEvent->buffer.data(), buffer, len);
+	_sendQueue.push(sendBuffer); // 보낼 데이터를 쌓아놓음
 
-	RegisterSend(sendEvent);
+	if (_sendRegistered.exchange(true) == false)
+		RegisterSend();
 }
 
 // 서버끼리 연결할 때는 이 세션이 상대방 서버를 의미
@@ -71,7 +67,7 @@ void Session::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 		ProcessRecv(numOfBytes);
 		break;
 	case EventType::Send:
-		ProcessSend(static_cast<SendEvent*>(iocpEvent), numOfBytes);
+		ProcessSend(numOfBytes);
 		break;
 	default:
 		break;
@@ -182,25 +178,57 @@ void Session::RegisterRecv()
 	}
 }
 
-void Session::RegisterSend(SendEvent* sendEvent)
+void Session::RegisterSend()
 {
 	if (IsConnected() == false)
 		return;
 
-	WSABUF wsaBuf;
-	wsaBuf.buf = (char*)sendEvent->buffer.data();
-	wsaBuf.len = (ULONG)sendEvent->buffer.size();
+	_sendEvent.Init();
+	_sendEvent.owner = shared_from_this(); // ADD_REF
+
+	// 보낼 데이터를 sendEvent에 등록
+	{
+		// 이미 락을 잡고 RegisterSend()를 실행했는데 왜 또 잡지?
+		// 나중에 RegisterSend()에서 락을 안 잡고 하는 걸로 바뀔 수 있어서 락을 이중으로 잡음
+		WRITE_LOCK;
+
+		int32 writeSize = 0;
+		while (_sendQueue.empty() == false)
+		{
+			SendBufferRef sendBuffer = _sendQueue.front();
+
+			writeSize += sendBuffer->WriteSize();
+
+			_sendQueue.pop();
+			_sendEvent.sendBuffers.push_back(sendBuffer); // sendEvent에 등록
+		}
+	}
+
+	// 여기부턴 다시 안전해서 멀티스레드를 고려하지 않아도 됨
+	// 애당초 RegisterSend는 한 번에 한 스레드만 타므로
+
+	// Scatter-Gather ( 흩어져 있는 데이터들을 모아서 한 방에 보내는 기법 )
+	Vector<WSABUF> wsaBufs;
+	wsaBufs.reserve(_sendEvent.sendBuffers.size());
+	for (SendBufferRef sendBuffer : _sendEvent.sendBuffers)
+	{
+		WSABUF wsaBuf;
+		wsaBuf.buf = reinterpret_cast<char*>(sendBuffer->Buffer());
+		wsaBuf.len = static_cast<LONG>(sendBuffer->WriteSize());
+		wsaBufs.push_back(wsaBuf);
+	}
 
 	DWORD numOfBytes = 0;
 	// iocp에 관찰대상으로 등록되어 있어서 완료가 되면 ProcessSend()로 넘어가게 된다.
-	if (::WSASend(_socket, &wsaBuf, 1, OUT &numOfBytes, 0, sendEvent, nullptr) == SOCKET_ERROR)
+	if (::WSASend(_socket, wsaBufs.data(), static_cast<DWORD>(wsaBufs.size()), OUT & numOfBytes, 0, &_sendEvent, nullptr) == SOCKET_ERROR)
 	{
 		int32 errorCode = ::WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			HandleError(errorCode);
-			sendEvent->owner = nullptr; // RELEASE_REF
-			xdelete(sendEvent);
+			_sendEvent.owner = nullptr; // RELEASE_REF
+			_sendEvent.sendBuffers.clear(); // RELEASE_REF
+			_sendRegistered.store(false);
 		}
 	}
 }
@@ -243,10 +271,10 @@ void Session::ProcessRecv(int32 numOfBytes)
 	RegisterRecv();
 }
 
-void Session::ProcessSend(SendEvent* sendEvent, int32 numOfBytes)
+void Session::ProcessSend(int32 numOfBytes)
 {
-	sendEvent->owner = nullptr; // RELEASE_REF
-	xdelete(sendEvent);
+	_sendEvent.owner = nullptr; // RELEASE_REF
+	_sendEvent.sendBuffers.clear(); // RELEASE_REF
 
 	if (numOfBytes == 0)
 	{
@@ -256,6 +284,12 @@ void Session::ProcessSend(SendEvent* sendEvent, int32 numOfBytes)
 
 	// 컨텐츠 코드에서 재정의
 	OnSend(numOfBytes);
+
+	WRITE_LOCK; // sendQueue 때문에 락 걸어야 함
+	if (_sendQueue.empty())
+		_sendRegistered.store(false);
+	else
+		RegisterSend();
 }
 
 void Session::HandleError(int32 errorCode)

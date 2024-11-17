@@ -56,8 +56,11 @@ class SendEvent : public IocpEvent
 {
 public:
 	SendEvent() : IocpEvent(EventType::Send) { }
-
-	// TEMP
-	vector<BYTE> buffer;
+	
+	/* 
+	sendQueue에서 버퍼를 빼갈 때 레퍼카운트가 줄기 때문에 
+	WSASend 끝날 때까지 사라지지 않게 하기 위해 그걸 다시 한 번 여기서 보관해주는 개념
+	*/
+	Vector<SendBufferRef> sendBuffers; 
 };
 
