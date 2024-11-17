@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameSession.h"
 #include "GameSessionManager.h"
+#include "ServerPacketHandler.h"
 
 void GameSession::OnConnected()
 {
@@ -13,10 +14,9 @@ void GameSession::OnDisconnected()
 }
 
 // 완전체로 조립된 패킷이 왔다고 확신할 수 있는 상태
-int32 GameSession::OnRecvPacket(BYTE* buffer, int32 len)
+void GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 {
-	PacketHeader header = *((PacketHeader*)buffer);
-	cout << "Packet Id : " << header.id << "size : " << header.size << endl;
+	ServerPacketHandler::HandlePacket(buffer, len);
 
 	// 보내는 데이터 크기보다 훨씬 큰 4096으로 잡는 이유
 	// -> 나중에는 보낼 데이터의 길이를 미리 예측할 수 없는 상황이 생김
@@ -24,8 +24,6 @@ int32 GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 	// -> sendBuffer Pooling 기법으로 해결 가능~ ( SendBufferChunk )
 	//SendBufferRef sendBuffer = MakeShared<SendBuffer>(4096);
 	//sendBuffer->CopyData(buffer, len); // 처음 한 번은 복사해줌
-
-	return len;
 }
 
 void GameSession::OnSend(int32 len)

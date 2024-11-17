@@ -45,13 +45,19 @@
     <ClCompile Include="session_test_client.cpp">
       <Filter>socket</Filter>
     </ClCompile>
-    <ClCompile Include="send_recv_buffer_session_client.cpp">
+    <ClCompile Include="DummyClient.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientPacketHandler.cpp">
       <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientPacketHandler.h">
+      <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
