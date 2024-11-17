@@ -83,6 +83,7 @@ SendBufferRef SendBufferManager::Open(uint32 size)
 
 SendBufferChunkRef SendBufferManager::Pop()
 {
+	cout << "Pop SENDBUFFERCHUNK" << endl;
 	{
 		WRITE_LOCK;
 		if (_sendBufferChunks.empty() == false)
@@ -100,6 +101,7 @@ SendBufferChunkRef SendBufferManager::Pop()
 
 void SendBufferManager::Push(SendBufferChunkRef buffer)
 {
+	cout << "Push SENDBUFFERCHUNK" << endl;
 	WRITE_LOCK;
 	_sendBufferChunks.push_back(buffer);
 }
