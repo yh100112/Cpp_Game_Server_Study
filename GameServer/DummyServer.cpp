@@ -8,8 +8,25 @@
 #include "BufferWriter.h"
 #include "ServerPacketHandler.h"
 
+// 패킷 직렬화 (Serialization)
+
+#pragma pack(1) // 1byte 단위로 관리하겠다
+struct PKT_S_TEST
+{
+public:
+	uint64 id; // 8byte
+	uint32 hp; // 4byte
+	uint16 attack; // 2byte
+};
+#pragma pack()
+
 int main()
 {
+	PKT_S_TEST pkt;
+	pkt.hp = 1;
+	pkt.hp = 2;
+	pkt.attack = 3;
+
 	ServerServiceRef service = MakeShared<ServerService>(
 		NetAddress(L"127.0.0.1", 7777),
 		MakeShared<IocpCore>(),
