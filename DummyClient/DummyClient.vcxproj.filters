@@ -45,7 +45,7 @@
     <ClCompile Include="session_test_client.cpp">
       <Filter>socket</Filter>
     </ClCompile>
-    <ClCompile Include="DummyClient.cpp">
+    <ClCompile Include="packet_serialize_client.cpp">
       <Filter>socket</Filter>
     </ClCompile>
     <ClCompile Include="ClientPacketHandler.cpp">

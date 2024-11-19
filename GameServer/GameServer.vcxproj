@@ -231,7 +231,7 @@
     </ClCompile>
     <ClCompile Include="GameSession.cpp" />
     <ClCompile Include="GameSessionManager.cpp" />
-    <ClCompile Include="DummyServer.cpp" />
+    <ClCompile Include="packet_serialize_server.cpp" />
     <ClCompile Include="lockfreestack_memory.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

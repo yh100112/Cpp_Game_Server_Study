@@ -144,7 +144,7 @@
     <ClCompile Include="Socket_Utils_test_server.cpp">
       <Filter>socket</Filter>
     </ClCompile>
-    <ClCompile Include="DummyServer.cpp">
+    <ClCompile Include="packet_serialize_server.cpp">
       <Filter>socket</Filter>
     </ClCompile>
     <ClCompile Include="GameSessionManager.cpp">
