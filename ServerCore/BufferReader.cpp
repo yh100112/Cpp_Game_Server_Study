@@ -1,11 +1,8 @@
 #include "pch.h"
 #include "BufferReader.h"
-
-
 /*-----------------
 	BufferReader
 -----------------*/
-
 BufferReader::BufferReader()
 {
 }
