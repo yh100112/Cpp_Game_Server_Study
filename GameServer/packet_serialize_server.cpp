@@ -1,58 +1,67 @@
 #include "pch.h"
-#include <iostream>
 #include "ThreadManager.h"
 #include "Service.h"
-#include "Session.h"	
+#include "Session.h"
 #include "GameSession.h"
 #include "GameSessionManager.h"
 #include "BufferWriter.h"
 #include "ServerPacketHandler.h"
+#include <tchar.h>
 
-// 패킷 직렬화 (Serialization)
-#pragma pack(1) // 1byte 단위로 관리하겠다
-struct PKT_S_TEST
-{
-public:
-	uint64 id; // 8byte
-	uint32 hp; // 4byte
-	uint16 attack; // 2byte
-};
-#pragma pack()
 
 int main()
 {
-	PKT_S_TEST pkt;
-	pkt.hp = 1;
-	pkt.hp = 2;
-	pkt.attack = 3;
-
 	ServerServiceRef service = MakeShared<ServerService>(
 		NetAddress(L"127.0.0.1", 7777),
 		MakeShared<IocpCore>(),
-		MakeShared<GameSession>,
-		100  // 동접 100개 예약해달라
-	);
+		MakeShared<GameSession>, // TODO : SessionManager 등
+		100);
 
 	ASSERT_CRASH(service->Start());
 
-	// iocp에 들어온 애를 감지하는 worker thread 
 	for (int32 i = 0; i < 5; i++)
 	{
 		GThreadManager->Launch([=]()
 			{
 				while (true)
 				{
-					service->GetIocpCore()->Dispatch();  // iocp core에 들어온 일감을 감지하고 있다면 처리해준다.
+					service->GetIocpCore()->Dispatch();
 				}
 			});
 	}
 
-	char sendData[] = "Hello World";
+	WCHAR sendData3[1000] = L"가"; // UTF16 = Unicode (한글/로마 2바이트)
 
 	while (true)
 	{
-		vector<BuffData> buffs{ BuffData {100, 1.5f}, BuffData{200, 2.3f}, BuffData{300, 0.7f} };
-		SendBufferRef sendBuffer = ServerPacketHandler::Make_S_TEST(1001, 100, 10, buffs);
+		// [ PKT_S_TEST ]
+		PKT_S_TEST_WRITE pktWriter(1001, 100, 10);
+
+		// [ PKT_S_TEST ][BuffsListItem BuffsListItem BuffsListItem]
+		PKT_S_TEST_WRITE::BuffsList buffList = pktWriter.ReserveBuffsList(3);
+		buffList[0] = { 100, 1.5f };
+		buffList[1] = { 200, 2.3f };
+		buffList[2] = { 300, 0.7f };
+
+		PKT_S_TEST_WRITE::BuffsVictimsList vic0 = pktWriter.ReserveBuffsVictimsList(&buffList[0], 3);
+		{
+			vic0[0] = 1000;
+			vic0[1] = 2000;
+			vic0[2] = 3000;
+		}
+
+		PKT_S_TEST_WRITE::BuffsVictimsList vic1 = pktWriter.ReserveBuffsVictimsList(&buffList[1], 1);
+		{
+			vic1[0] = 1000;
+		}
+
+		PKT_S_TEST_WRITE::BuffsVictimsList vic2 = pktWriter.ReserveBuffsVictimsList(&buffList[2], 2);
+		{
+			vic2[0] = 3000;
+			vic2[1] = 5000;
+		}
+
+		SendBufferRef sendBuffer = pktWriter.CloseAndReturn();
 
 		GSessionManager.Broadcast(sendBuffer);
 
