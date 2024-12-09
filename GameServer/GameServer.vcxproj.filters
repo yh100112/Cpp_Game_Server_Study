@@ -28,6 +28,9 @@
     <Filter Include="socket">
       <UniqueIdentifier>{06ebbeda-4763-4a49-88bf-d6b3ea2ab004}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{a248b4ca-27c4-4cb4-a71b-31cca07d4c16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="multi_thread.cpp">
@@ -156,6 +159,15 @@
     <ClCompile Include="ServerPacketHandler.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="Protocol.pb.cc">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="protobufServerPacketHandler.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="prptobuf_game_server.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -186,6 +198,12 @@
       <Filter>socket</Filter>
     </ClInclude>
     <ClInclude Include="ServerPacketHandler.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.pb.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="protobufServerPacketHandler.h">
       <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>

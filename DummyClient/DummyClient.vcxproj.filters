@@ -10,6 +10,9 @@
     <Filter Include="socket">
       <UniqueIdentifier>{4649fb95-5852-449d-8c90-ef6ac376aef0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{3ab34c15-56bd-407e-85d8-4bfe58d62634}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -51,12 +54,24 @@
     <ClCompile Include="ClientPacketHandler.cpp">
       <Filter>socket</Filter>
     </ClCompile>
+    <ClCompile Include="Protocol.pb.cc">
+      <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="ProtoBufClientPacketHandler.cpp">
+      <Filter>socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="ClientPacketHandler.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.pb.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtoBufClientPacketHandler.h">
       <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>
