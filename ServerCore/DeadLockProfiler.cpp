@@ -103,6 +103,8 @@ void DeadLockProfiler::Dfs(int32 here)
 		}
 
 		// here가 there보다 먼저 발견되었다면, there는 here의 후손이다. ( 순방향 간선 )
+		if (_discoveredOrder[here] < _discoveredOrder[there])
+			continue;
 
 		// 순방향이 아니고, Dfs(there)가 아직 종료하지 않았다면, there는 here의 선조이다. ( 역방향 간선 )
 		if (_finished[there] == false)
