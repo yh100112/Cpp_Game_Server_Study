@@ -25,11 +25,14 @@ void* StompAllocator::Alloc(int32 size)
 {
 	// 4 + 4095 / 4096 = 1 -> 반올림 코드
 	const int64 pageCount = (size + PAGE_SIZE - 1) / PAGE_SIZE;
-	const int64 dataOffset = pageCount * PAGE_SIZE - size;
+
+	// 할당할 메모리의 offset을 page의 맨 끝 부분에 할당 하도록 함 - memory overflow를 잡아주기 위함
+	const int64 dataOffset = pageCount * PAGE_SIZE - size; 
 
 	void* baseAddress = ::VirtualAlloc(NULL, pageCount * PAGE_SIZE, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 	
-	// int8*로 baseAddress를1바이트 단위로 바꿔서 바이트 단위로 계산할 수 있게 함
+	// int8*로 baseAddress를 바이트 단위로 바꿔서 바이트 단위로 dataOffset과 계산을 할 수 있게 함
+	// 포인터 계산은 포인터 크기에 따라 영향을 주므로 확실하게 바이트 단위로 캐스팅한 후 dataOffset과 더한 거임
 	return static_cast<void*>(static_cast<int8*>(baseAddress) + dataOffset); 
 }
 
