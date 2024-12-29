@@ -75,7 +75,7 @@ int main()
 
 
 	// 옵션을 해석하고 처리할 주체
-	// 소켓 코드 -> SQL_SOCKET
+	// 소켓 코드 -> SOL_SOCKET
 	// IPv4 -> IPPROTO_IP
 	// TCP 프로토콜 -> IPPROTO_TCP
 
@@ -92,18 +92,18 @@ int main()
 	LINGER linger;
 	linger.l_onoff = 1;
 	linger.l_linger = 5;
-	::setsockopt(serverSocket, SOL_SOCKET, SO_KEEPALIVE, (char*)&linger, sizeof(linger));
+	::setsockopt(serverSocket, SOL_SOCKET, SO_LINGER, (char*)&linger, sizeof(linger));
 
 	// half-close
 	// SD_SEND : send 막는다.
 	// SD_RECEIVE : recv 막는다
 	// SD_BOTH : 둘 다 막는다
-	::shutdown(serverSocket, SD_SEND);
-
+	::shutdown(serverSocket, SD_SEND); // 나는 더이상 너한테 보낼 것이 없다. ( closesocket() 전에 해줘야 함 - 우아하게 )
 	// 소켓 리소스 반환 ( 소켓 닫기 )
 	// send -> closesocket
 	::closesocket(serverSocket);
 
+	// 송수신 버퍼 크기를 알고 싶을 때 사용
 	// SO_SNDBUF = 송신 버퍼 크기
 	// SO_RCVBUF = 수신 버퍼 크기
 	int32 sendBufferSize;
@@ -116,8 +116,10 @@ int main()
 	cout << "수신 버퍼 크기 : " << recvBufferSize << endl;
 
 	// SO_REUSEADDR
-	// ip 주소 및 port 재사용 ( 강제로 내가 그 port를 지금 사용하겠다! )
+	// 이미 사용 중인 ip 주소 및 port 재사용 ( 강제로 내가 그 port를 지금 사용하겠다! )
+	// 개발 단계에서 편하라고 하는 작업
 	{
+		bool enable = true;
 		::setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&enable, sizeof(enable));
 	}
 
