@@ -16,9 +16,6 @@ IocpCore::~IocpCore()
 // CP에 관찰할 대상(IocpObject)을 등록
 bool IocpCore::Register(IocpObjectRef iocpObject)
 {
-	// SOCKET socket;
-	//return ::CreateIoCompletionPort(socket, _iocpHandle, /*key*/0, 0);
-
 	// Ciocp()가 꼭 session만 넣는 용도로만 사용할 수 있는 게 아니다.
 	// 꼭 네트워크 정보(socket, session..) 등이 아니더라도 다양한 용도로 사용할 수 있기 때문에
 	// 그걸 광범위하게 만들어줄 수 있도록 IocpObject로 만들어서 관리하기로 하자!
@@ -28,8 +25,7 @@ bool IocpCore::Register(IocpObjectRef iocpObject)
 	//return ::CreateIoCompletionPort(iocpObject->GetHandle(), _iocpHandle, 
 	//	reinterpret_cast<ULONG_PTR>(iocpObject), 0);
 	
-	return ::CreateIoCompletionPort(iocpObject->GetHandle(), _iocpHandle, 
-		/*key*/0, 0); // 소멸된 세션에 접근하는 문제를 해결하기 위해 key를 사용하지 않도록 함 ( 다른 방식으로 처리 )
+	return ::CreateIoCompletionPort(iocpObject->GetHandle(), _iocpHandle, /*key*/0, 0); // 소멸된 세션에 접근하는 문제를 해결하기 위해 key를 사용하지 않도록 함 ( 다른 방식으로 처리 )
 }
 
 // worker thread들이 일감이 있는지 두리번두리번 찾는다.
@@ -44,8 +40,7 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
 
 	// 성공하면 두가지 정보를 넣어서 보냈던 iocpObject와 iocpEvent 정보를 복원해줌
 	// 우리의 일꾼(worker thread)들이 여기에서 전부 무한정 대기를 탈 것임
-	if (::GetQueuedCompletionStatus(_iocpHandle, OUT &numOfBytes, OUT &key, 
-		OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
+	if (::GetQueuedCompletionStatus(_iocpHandle, OUT &numOfBytes, OUT &key, OUT reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), timeoutMs))
 	{
 		// 일감이 있어서 1개 스레드가 깨서 들어온 것이므로 iocpObject->Dispatch를 실행
 		// Listener 클래스가 IocpOjbect를 상속받아서 Dispatch를 오버라이딩하므로 Listener::Dispatch()를 호출
