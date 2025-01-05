@@ -2,209 +2,50 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Main">
-      <UniqueIdentifier>{c6956c15-d3ed-4595-b4fb-b8bd5183c1b4}</UniqueIdentifier>
+      <UniqueIdentifier>{e8dccf15-3bdd-4854-8dd2-f0ba5d770abc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utils">
-      <UniqueIdentifier>{fe26c36e-6577-46d2-9448-44a9d311ed28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="deadlock">
-      <UniqueIdentifier>{480606b4-7486-4836-b4ad-f3c3fdc07571}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lock">
-      <UniqueIdentifier>{8bef41a3-ee10-4260-9b43-1c4d4bdf3e1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LockPractice">
-      <UniqueIdentifier>{05c77470-135b-40d5-afaf-c5587a33cd03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="threadManager">
-      <UniqueIdentifier>{5fe2e8db-dd7b-4bba-a5c1-09aa158a5b71}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="memory">
-      <UniqueIdentifier>{f707cab4-1666-4e8b-98c5-bc9be4381921}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="typeCasting">
-      <UniqueIdentifier>{bdd237d9-ef98-4029-aa04-53ae35bbbd85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="socket">
-      <UniqueIdentifier>{06ebbeda-4763-4a49-88bf-d6b3ea2ab004}</UniqueIdentifier>
+      <UniqueIdentifier>{37e6aaa6-0769-426b-aa67-d42e60cd791c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Protocol">
-      <UniqueIdentifier>{a248b4ca-27c4-4cb4-a71b-31cca07d4c16}</UniqueIdentifier>
+      <UniqueIdentifier>{603496b5-138a-4725-951a-b0a8ee8dfe85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="multi_thread.cpp">
+    <ClCompile Include="GameServer.cpp">
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="atomic.cpp">
+    <ClCompile Include="GameSession.cpp">
       <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="lock.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="UserManager.cpp">
-      <Filter>deadlock</Filter>
-    </ClCompile>
-    <ClCompile Include="deaklock.cpp">
-      <Filter>deadlock</Filter>
-    </ClCompile>
-    <ClCompile Include="AccountManager.cpp">
-      <Filter>deadlock</Filter>
-    </ClCompile>
-    <ClCompile Include="spinlock.cpp">
-      <Filter>Lock</Filter>
-    </ClCompile>
-    <ClCompile Include="event.cpp">
-      <Filter>Lock</Filter>
-    </ClCompile>
-    <ClCompile Include="condition_variable.cpp">
-      <Filter>Lock</Filter>
-    </ClCompile>
-    <ClCompile Include="Future.cpp">
-      <Filter>Lock</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_cash.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="cpu_pipeline.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_model.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="TLS.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="LockPracMain.cpp">
-      <Filter>LockPractice</Filter>
-    </ClCompile>
-    <ClCompile Include="ConcurrentQueue.cpp">
-      <Filter>LockPractice</Filter>
-    </ClCompile>
-    <ClCompile Include="ConcurrentStack.cpp">
-      <Filter>LockPractice</Filter>
-    </ClCompile>
-    <ClCompile Include="GameServer.cpp">
-      <Filter>threadManager</Filter>
-    </ClCompile>
-    <ClCompile Include="smart_pointer.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="ref_count_cycle_problem.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="allocater_test.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="stomp_allocator.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="stl_allocator.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_pool_1.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_pool_2.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="lockfreestack_memory.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_pool_3.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="typecast_test.cpp">
-      <Filter>typeCasting</Filter>
-    </ClCompile>
-    <ClCompile Include="socket_server_1.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="socket_server_2_udp.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="socket_server_3_nonblock.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="select_server.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="wsa_event_select_server.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="overlapped_server.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="overlapped_callback_server.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="completion_port_server.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="Socket_Utils_test_server.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="packet_serialize_server.cpp">
-      <Filter>socket</Filter>
     </ClCompile>
     <ClCompile Include="GameSessionManager.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="GameSession.cpp">
-      <Filter>socket</Filter>
+      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="ServerPacketHandler.cpp">
-      <Filter>socket</Filter>
+      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Protocol.pb.cc">
       <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="protobufServerPacketHandler.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="prptobuf_game_server.cpp">
-      <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="UserManager.h">
-      <Filter>deadlock</Filter>
-    </ClInclude>
-    <ClInclude Include="AccountManager.h">
-      <Filter>deadlock</Filter>
-    </ClInclude>
-    <ClInclude Include="ConcurrentQueue.h">
-      <Filter>LockPractice</Filter>
-    </ClInclude>
-    <ClInclude Include="ConcurrentStack.h">
-      <Filter>LockPractice</Filter>
-    </ClInclude>
-    <ClInclude Include="ConcurrentStack_2.h">
-      <Filter>LockPractice</Filter>
-    </ClInclude>
-    <ClInclude Include="lockfreestack_memory.h">
-      <Filter>memory</Filter>
-    </ClInclude>
     <ClInclude Include="GameSessionManager.h">
-      <Filter>socket</Filter>
+      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="GameSession.h">
-      <Filter>socket</Filter>
+      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="ServerPacketHandler.h">
-      <Filter>socket</Filter>
+      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="Protocol.pb.h">
       <Filter>Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="protobufServerPacketHandler.h">
-      <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

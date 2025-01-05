@@ -5,12 +5,16 @@ class Session;
 enum class EventType : uint8
 {
 	Connect,
-	DisConnect,
+	Disconnect,
 	Accept,
 	//PreRecv,
 	Recv,
 	Send
 };
+
+/*--------------
+	IocpEvent
+---------------*/
 
 class IocpEvent : public OVERLAPPED
 {
@@ -24,18 +28,29 @@ public:
 	IocpObjectRef	owner;
 };
 
+/*----------------
+	ConnectEvent
+-----------------*/
+
 class ConnectEvent : public IocpEvent
 {
 public:
 	ConnectEvent() : IocpEvent(EventType::Connect) { }
 };
 
-class DisConnectEvent : public IocpEvent
+/*--------------------
+	DisconnectEvent
+----------------------*/
+
+class DisconnectEvent : public IocpEvent
 {
 public:
-	DisConnectEvent() : IocpEvent(EventType::DisConnect) { }
+	DisconnectEvent() : IocpEvent(EventType::Disconnect) { }
 };
 
+/*----------------
+	AcceptEvent
+-----------------*/
 
 class AcceptEvent : public IocpEvent
 {
@@ -43,8 +58,12 @@ public:
 	AcceptEvent() : IocpEvent(EventType::Accept) { }
 
 public:
-	SessionRef session = nullptr;
+	SessionRef	session = nullptr;
 };
+
+/*----------------
+	RecvEvent
+-----------------*/
 
 class RecvEvent : public IocpEvent
 {
@@ -52,15 +71,14 @@ public:
 	RecvEvent() : IocpEvent(EventType::Recv) { }
 };
 
+/*----------------
+	SendEvent
+-----------------*/
+
 class SendEvent : public IocpEvent
 {
 public:
 	SendEvent() : IocpEvent(EventType::Send) { }
-	
-	/* 
-	sendQueue에서 버퍼를 빼갈 때 레퍼카운트가 줄기 때문에 
-	WSASend 끝날 때까지 사라지지 않게 하기 위해 그걸 다시 한 번 여기서 보관해주는 개념
-	*/
-	Vector<SendBufferRef> sendBuffers; 
+	 
+	Vector<SendBufferRef> sendBuffers;
 };
-

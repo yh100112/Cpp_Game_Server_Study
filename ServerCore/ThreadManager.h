@@ -3,9 +3,9 @@
 #include <thread>
 #include <functional>
 
-/*---------------
+/*------------------
 	ThreadManager
-----------------*/
+-------------------*/
 
 class ThreadManager
 {
@@ -22,6 +22,5 @@ public:
 private:
 	Mutex			_lock;
 	vector<thread>	_threads;
-
 };
 

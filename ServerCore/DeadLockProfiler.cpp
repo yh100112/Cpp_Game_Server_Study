@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "DeadLockProfiler.h"
 
-/*------------
+
+/*--------------------
 	DeadLockProfiler
---------------*/
-// git test
+---------------------*/
 
 void DeadLockProfiler::PushLock(const char* name)
 {
@@ -18,7 +18,7 @@ void DeadLockProfiler::PushLock(const char* name)
 	{
 		lockId = static_cast<int32>(_nameToId.size());
 		_nameToId[name] = lockId;
-		_IdToName[lockId] = name;
+		_idToName[lockId] = name;
 	}
 	else
 	{
@@ -53,14 +53,13 @@ void DeadLockProfiler::PopLock(const char* name)
 
 	int32 lockId = _nameToId[name];
 	if (LLockStack.top() != lockId)
-		CRASH("INVALID_UNLOCK")
+		CRASH("INVALID_UNLOCK");
 
 	LLockStack.pop();
 }
 
 void DeadLockProfiler::CheckCycle()
 {
-	// 초기화
 	const int32 lockCount = static_cast<int32>(_nameToId.size());
 	_discoveredOrder = vector<int32>(lockCount, -1);
 	_discoveredCount = 0;
@@ -74,7 +73,6 @@ void DeadLockProfiler::CheckCycle()
 	_discoveredOrder.clear();
 	_finished.clear();
 	_parent.clear();
-
 }
 
 void DeadLockProfiler::Dfs(int32 here)
@@ -84,7 +82,7 @@ void DeadLockProfiler::Dfs(int32 here)
 
 	_discoveredOrder[here] = _discoveredCount++;
 
-	// 모든 인접한 정점 순회
+	// 모든 인접한 정점을 순회한다.
 	auto findIt = _lockHistory.find(here);
 	if (findIt == _lockHistory.end())
 	{
@@ -103,26 +101,27 @@ void DeadLockProfiler::Dfs(int32 here)
 			continue;
 		}
 
-		// here가 there보다 먼저 발견되었다면, there는 here의 후손이다. ( 순방향 간선 )
+		// here가 there보다 먼저 발견되었다면, there는 here의 후손이다. (순방향 간선)
 		if (_discoveredOrder[here] < _discoveredOrder[there])
 			continue;
 
-		// 순방향이 아니고, Dfs(there)가 아직 종료하지 않았다면, there는 here의 선조이다. ( 역방향 간선 )
+		// 순방향이 아니고, Dfs(there)가 아직 종료하지 않았다면, there는 here의 선조이다. (역방향 간선)
 		if (_finished[there] == false)
 		{
-			printf("%s -> %s\n", _IdToName[here], _IdToName[there]);
+			printf("%s -> %s\n", _idToName[here], _idToName[there]);
 
 			int32 now = here;
 			while (true)
 			{
-				printf("%s -> %s\n", _IdToName[_parent[now]], _IdToName[now]);
+				printf("%s -> %s\n", _idToName[_parent[now]], _idToName[now]);
 				now = _parent[now];
 				if (now == there)
 					break;
 			}
+
 			CRASH("DEADLOCK_DETECTED");
 		}
-
 	}
 
+	_finished[here] = true;
 }

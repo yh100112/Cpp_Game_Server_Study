@@ -6,7 +6,7 @@
 #include "CoreGlobal.h"
 #include "Container.h"
 
-#include <Windows.h>
+#include <windows.h>
 #include <iostream>
 using namespace std;
 

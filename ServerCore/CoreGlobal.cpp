@@ -21,14 +21,15 @@ public:
 		GMemory = new Memory();
 		GSendBufferManager = new SendBufferManager();
 		GDeadLockProfiler = new DeadLockProfiler();
-		SocketUtils::Init(); // 윈속 초기화를 여기서 해줌
+		SocketUtils::Init();
 	}
+
 	~CoreGlobal()
 	{
 		delete GThreadManager;
 		delete GMemory;
 		delete GSendBufferManager;
 		delete GDeadLockProfiler;
-		SocketUtils::Clear(); // init과 짝을 맞춤
+		SocketUtils::Clear();
 	}
 } GCoreGlobal;

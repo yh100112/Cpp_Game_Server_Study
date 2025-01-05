@@ -2,63 +2,27 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Main">
-      <UniqueIdentifier>{5e8e6437-1e33-481b-9945-16a05805fd07}</UniqueIdentifier>
+      <UniqueIdentifier>{7ce01a19-38b3-498c-9275-d574830917cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utils">
-      <UniqueIdentifier>{fbbd29fb-86e8-4223-905a-3fcd75456ed4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="socket">
-      <UniqueIdentifier>{4649fb95-5852-449d-8c90-ef6ac376aef0}</UniqueIdentifier>
+      <UniqueIdentifier>{a5cbd172-9aef-4030-945e-7110f2ea7d51}</UniqueIdentifier>
     </Filter>
     <Filter Include="Protocol">
-      <UniqueIdentifier>{3ab34c15-56bd-407e-85d8-4bfe58d62634}</UniqueIdentifier>
+      <UniqueIdentifier>{15ffd3da-e358-4e2b-8754-e2e4a6f52136}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DummyClient.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="socket_client_1.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="socket_client_2_udp.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="socket_client_3_nonblock.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="select_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="wsa_event_select_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="overlapped_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="overlapped_callback_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="completion_port_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="Socket_Utils_test_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="session_test_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="packet_serialize_client.cpp">
-      <Filter>socket</Filter>
-    </ClCompile>
     <ClCompile Include="ClientPacketHandler.cpp">
-      <Filter>socket</Filter>
+      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Protocol.pb.cc">
       <Filter>Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="ProtoBufClientPacketHandler.cpp">
-      <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,18 +30,10 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="ClientPacketHandler.h">
-      <Filter>socket</Filter>
+      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="Protocol.pb.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="ProtoBufClientPacketHandler.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="PDL.xml">
-      <Filter>Main</Filter>
-    </Xml>
   </ItemGroup>
 </Project>

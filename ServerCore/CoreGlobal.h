@@ -6,5 +6,3 @@ extern class SendBufferManager* GSendBufferManager;
 
 extern class DeadLockProfiler*	GDeadLockProfiler;
 
-
-

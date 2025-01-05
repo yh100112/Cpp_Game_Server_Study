@@ -1,8 +1,9 @@
 #pragma once
 
-/*-----------------
+/*----------------
 	BufferReader
 -----------------*/
+
 class BufferReader
 {
 public:
@@ -20,7 +21,7 @@ public:
 	bool			Peek(void* dest, uint32 len);
 
 	template<typename T>
-	bool			Read(T* dest) { return Read(dest, sizef(T)); }
+	bool			Read(T* dest) { return Read(dest, sizeof(T)); }
 	bool			Read(void* dest, uint32 len);
 
 	template<typename T>
@@ -31,7 +32,6 @@ private:
 	uint32			_size = 0;
 	uint32			_pos = 0;
 };
-
 
 template<typename T>
 inline BufferReader& BufferReader::operator>>(OUT T& dest)

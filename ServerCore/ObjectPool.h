@@ -1,9 +1,7 @@
 #pragma once
-
 #include "Types.h"
 #include "MemoryPool.h"
 
-// 같은 클래스 객체는 모아서 같은 메모리 풀을 사용해준다는 의미
 template<typename Type>
 class ObjectPool
 {

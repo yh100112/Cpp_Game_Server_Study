@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "SendBuffer.h"
 
-/*-----------------
+/*----------------
 	SendBuffer
 -----------------*/
-SendBuffer::SendBuffer(SendBufferChunkRef owner, BYTE* buffer, int32 allocSize)
+
+SendBuffer::SendBuffer(SendBufferChunkRef owner, BYTE* buffer, uint32 allocSize)
 	: _owner(owner), _buffer(buffer), _allocSize(allocSize)
 {
 }
@@ -20,9 +21,10 @@ void SendBuffer::Close(uint32 writeSize)
 	_owner->Close(writeSize);
 }
 
-/*-----------------
-	SendBufferChunk ( 굉장히 큰 버퍼 한개를 생성하고 필요할 때마다 쪼개서 사용하는 정책 )
------------------*/
+/*--------------------
+	SendBufferChunk
+--------------------*/
+
 SendBufferChunk::SendBufferChunk()
 {
 }
@@ -56,16 +58,17 @@ void SendBufferChunk::Close(uint32 writeSize)
 	_usedSize += writeSize;
 }
 
-/*-----------------
+/*---------------------
 	SendBufferManager
------------------*/
+----------------------*/
+
 SendBufferRef SendBufferManager::Open(uint32 size)
 {
 	if (LSendBufferChunk == nullptr)
 	{
-		LSendBufferChunk = Pop(); // WRITE_LOCK;
+		LSendBufferChunk = Pop(); // WRITE_LOCK
 		LSendBufferChunk->Reset();
-	}
+	}		
 
 	ASSERT_CRASH(LSendBufferChunk->IsOpen() == false);
 
@@ -84,6 +87,7 @@ SendBufferRef SendBufferManager::Open(uint32 size)
 SendBufferChunkRef SendBufferManager::Pop()
 {
 	cout << "Pop SENDBUFFERCHUNK" << endl;
+
 	{
 		WRITE_LOCK;
 		if (_sendBufferChunks.empty() == false)
@@ -94,20 +98,18 @@ SendBufferChunkRef SendBufferManager::Pop()
 		}
 	}
 
-	// 사용이 끝난 메모리SendBufferChunk 를 xdelete로 날리는 게 아니라 PushGlobal로 가서 다시 저장해준다.
-	// 즉, 계속해서 재사용한다.
 	return SendBufferChunkRef(xnew<SendBufferChunk>(), PushGlobal);
 }
 
 void SendBufferManager::Push(SendBufferChunkRef buffer)
 {
-	cout << "Push SENDBUFFERCHUNK" << endl;
 	WRITE_LOCK;
 	_sendBufferChunks.push_back(buffer);
 }
 
 void SendBufferManager::PushGlobal(SendBufferChunk* buffer)
 {
+	cout << "PushGlobal SENDBUFFERCHUNK" << endl;
+
 	GSendBufferManager->Push(SendBufferChunkRef(buffer, PushGlobal));
-	// 반납한 걸 그래도 계속 재사용
 }

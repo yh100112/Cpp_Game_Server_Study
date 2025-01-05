@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "NetAddress.h"
 
+/*--------------
+	NetAddress
+---------------*/
+
 NetAddress::NetAddress(SOCKADDR_IN sockAddr) : _sockAddr(sockAddr)
 {
 }
@@ -20,10 +24,9 @@ wstring NetAddress::GetIpAddress()
 	return wstring(buffer);
 }
 
-// ip를 받아서 IN_ADDR로 만들어주는 함수
 IN_ADDR NetAddress::Ip2Address(const WCHAR* ip)
 {
 	IN_ADDR address;
-	::InetPtonW(AF_INET, ip, &address);  // wchar이므로 w가 붙음
+	::InetPtonW(AF_INET, ip, &address);
 	return address;
 }

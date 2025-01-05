@@ -1,45 +1,40 @@
 #pragma once
 #include "Types.h"
 
-/*---------------------
-		R/W SpinLock
-----------------------*/
+/*----------------
+    RW SpinLock
+-----------------*/
 
-/*--------------------
-
-int32 : [WWWWWWWW][WWWWWWWW][RRRRRRRR][RRRRRRRR]
+/*--------------------------------------------
+[WWWWWWWW][WWWWWWWW][RRRRRRRR][RRRRRRRR]
 W : WriteFlag (Exclusive Lock Owner ThreadId)
 R : ReadFlag (Shared Lock Count)
----------------------*/
+---------------------------------------------*/
 
-// W -> W (o)
-// W -> R (o)
-// R -> W (X)
 class Lock
 {
-public:
-	enum : uint32
-	{
-		ACQUIRE_TIMEOUT_TICK = 10000,
-		MAX_SPIN_COUNT = 5000,
-		WRITE_THREAD_MASK = 0xFFFF'0000, //상위 16비트가 1로 세팅된 걸 의미 (W부분)
-		READ_COUNT_MASK = 0x0000'FFFF,   //하위 16비트가 1로 세팅된 걸 의미 (R부분)
-		EMPTY_FLAG = 0x0000'0000
-	};
+    enum : uint32
+    {
+        ACQUIRE_TIMEOUT_TICK = 10000,
+        MAX_SPIN_COUNT = 5000,
+        WRITE_THREAD_MASK = 0xFFFF'0000,
+        READ_COUNT_MASK = 0x0000'FFFF,
+        EMPTY_FLAG = 0x0000'0000
+    };
 
 public:
-	void WriteLock(const char* name);
-	void WriteUnlock(const char* name);
-	void ReadLock(const char* name);
-	void ReadUnlock(const char* name) ;
+    void WriteLock(const char* name);
+    void WriteUnlock(const char* name);
+    void ReadLock(const char* name);
+    void ReadUnlock(const char* name);
 
 private:
-	Atomic<uint32> _lockFlag = EMPTY_FLAG;
-	uint16 _writeCount = 0;
+    Atomic<uint32> _lockFlag = EMPTY_FLAG;
+    uint16 _writeCount = 0;
 };
 
-/*-----------------
-	LockGuards
+/*----------------
+    LockGuards
 -----------------*/
 
 class ReadLockGuard
@@ -47,9 +42,10 @@ class ReadLockGuard
 public:
 	ReadLockGuard(Lock& lock, const char* name) : _lock(lock), _name(name) { _lock.ReadLock(name); }
 	~ReadLockGuard() { _lock.ReadUnlock(_name); }
+
 private:
 	Lock& _lock;
-	const char* _name;
+    const char* _name;
 };
 
 class WriteLockGuard
@@ -57,10 +53,8 @@ class WriteLockGuard
 public:
 	WriteLockGuard(Lock& lock, const char* name) : _lock(lock), _name(name) { _lock.WriteLock(name); }
 	~WriteLockGuard() { _lock.WriteUnlock(_name); }
+
 private:
 	Lock& _lock;
-	const char* _name;
+    const char* _name;
 };
-
-
-

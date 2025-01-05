@@ -6,13 +6,11 @@
 /*-------------
 	Service
 --------------*/
+
 Service::Service(ServiceType type, NetAddress address, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
-	: _type(type), 
-	_netAddress(address), 
-	_iocpCore(core), 
-	_sessionFactory(factory), 
-	_maxSessionCount(maxSessionCount)
+	: _type(type), _netAddress(address), _iocpCore(core), _sessionFactory(factory), _maxSessionCount(maxSessionCount)
 {
+
 }
 
 Service::~Service()
@@ -52,6 +50,7 @@ void Service::ReleaseSession(SessionRef session)
 /*-----------------
 	ClientService
 ------------------*/
+
 ClientService::ClientService(NetAddress targetAddress, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
 	: Service(ServiceType::Client, targetAddress, core, factory, maxSessionCount)
 {
@@ -69,12 +68,10 @@ bool ClientService::Start()
 		if (session->Connect() == false)
 			return false;
 	}
+
 	return true;
 }
 
-/*-----------------
-	ServerService
-------------------*/
 ServerService::ServerService(NetAddress address, IocpCoreRef core, SessionFactory factory, int32 maxSessionCount)
 	: Service(ServiceType::Server, address, core, factory, maxSessionCount)
 {
@@ -98,5 +95,7 @@ bool ServerService::Start()
 
 void ServerService::CloseService()
 {
+	// TODO
+
 	Service::CloseService();
 }
